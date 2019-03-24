@@ -7,37 +7,27 @@ import java.util.List;
 
 /**
  * Przechoowuje samochody i ich powiązania z trasami.
- * Trasy możnaby odczytywać  jakiegoś pliku żeby było wygodniej.
  */
 
 @Data
 public class Map {
 
-	private static double width = 1000.0;
-	private static double height = 1000.0;
+	private double width = 450.0;
+	private double height = 270.0;
 
-	List<Route> routes; // keeps all posible routes;
+	List<Route> routes;
 	List<Vehicle> vehicles;
 
 	public Map(){
-		routes = new ArrayList<>();
+		ReadRoutes readRoutes = new ReadRoutes("./routes/");
+		routes = readRoutes.readAllRoutes();
 		vehicles = new ArrayList<>();
 
-		Route route = new Route();
-		Route route2 = new Route();
-		Route route3 = new Route();
+		for(int i = 0; i<routes.size(); i++){
+			vehicles.add(new Vehicle(routes.get(i), i));
+		}
 
-		route.route1();
-		route2.route2();
-		route3.route3();
 
-		routes.add(route);
-		routes.add(route2);
-		routes.add(route3);
-
-		vehicles.add(new Vehicle(route, 0));
-		vehicles.add(new Vehicle(route2, 1));
-		vehicles.add(new Vehicle(route3, 2));
 	}
 
 

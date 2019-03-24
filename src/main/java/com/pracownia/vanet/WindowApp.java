@@ -32,7 +32,7 @@ public class WindowApp extends Application {
 			root.getChildren().add(circle);
 		}
 
-		Scene scene = new Scene(root, 300, 250);
+		Scene scene = new Scene(root, 450, 270);
 		primaryStage.setTitle("Vanet");
 		primaryStage.setScene(scene);
 		primaryStage.show();

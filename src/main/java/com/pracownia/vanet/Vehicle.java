@@ -32,7 +32,7 @@ public class Vehicle {
 		currentX = route.xCoordinates.get(iterator);
 		currentY = route.yCoordinates.get(iterator);
 
-	//	System.out.println(id + " " + currentX + " " + currentY);
+		System.out.println(id + " " + currentX + " " + currentY);
 		iterator++;
 	}
 }

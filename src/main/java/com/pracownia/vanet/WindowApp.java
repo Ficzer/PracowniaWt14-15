@@ -1,14 +1,10 @@
 package com.pracownia.vanet;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -26,7 +22,11 @@ public class WindowApp extends Application {
 		List<Circle> circleList = new ArrayList<>();
 		Simulation simulation = new Simulation();
 		for(int i = 0; i<simulation.map.vehicles.size(); i++){
-			Circle circle = new Circle(simulation.getMap().getVehicles().get(i).currentX, simulation.getMap().getVehicles().get(i).currentY, 5.0, Color.BLACK);
+			Circle circle = new Circle(
+					simulation.getMap().getVehicles().get(i).getCoordinates().getX(),
+					simulation.getMap().getVehicles().get(i).getCoordinates().getY(),
+					5.0,
+					Color.BLACK);
 			simulation.run();
 			circleList.add(circle);
 			root.getChildren().add(circle);

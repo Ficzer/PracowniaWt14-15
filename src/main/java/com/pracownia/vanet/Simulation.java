@@ -16,6 +16,7 @@ public class Simulation {
 			for (Vehicle vehicle : map.getVehicles()) {
 				vehicle.update();
 			}
+			RangeDetector.checkForPossibleConnections(map.getVehicles(), map.getRsus());
 		//}
 	}
 }

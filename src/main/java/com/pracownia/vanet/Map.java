@@ -1,6 +1,7 @@
 package com.pracownia.vanet;
 
 import com.pracownia.vanet.net.Rsu;
+import javafx.scene.paint.Color;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class Map {
 		vehicles = new ArrayList<>();
 
 		for(int i = 0; i < routes.size(); ++i){
-			vehicles.add(new Vehicle(routes.get(i), i));
+			vehicles.add(new Vehicle(routes.get(i), i, Color.rgb((61*i)%200, (97*i)%200, (157*i)%200)));
 		}
 
 		rsus.add(new Rsu(new Point(96, 96)));

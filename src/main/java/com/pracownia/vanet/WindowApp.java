@@ -21,15 +21,18 @@ public class WindowApp extends Application {
 		Group root = new Group();
 		List<Circle> circleList = new ArrayList<>();
 		Simulation simulation = new Simulation();
-		for(int i = 0; i<simulation.map.vehicles.size(); i++){
-			Circle circle = new Circle(
-					simulation.getMap().getVehicles().get(i).getCoordinates().getX(),
-					simulation.getMap().getVehicles().get(i).getCoordinates().getY(),
-					5.0,
-					Color.BLACK);
-			simulation.run();
-			circleList.add(circle);
-			root.getChildren().add(circle);
+
+		for (int j = 0; j < 100; j++) {
+			for (int i = 0; i < simulation.map.vehicles.size(); i++) {
+				Circle circle = new Circle(
+						simulation.getMap().getVehicles().get(i).getCoordinates().getX(),
+						simulation.getMap().getVehicles().get(i).getCoordinates().getY(),
+						5.0,
+						simulation.getMap().getVehicles().get(i).color);
+				simulation.run();
+				circleList.add(circle);
+				root.getChildren().add(circle);
+			}
 		}
 
 		Scene scene = new Scene(root, 450, 270);

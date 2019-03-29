@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -42,10 +43,28 @@ public class Vehicle {
 
 		Random random = new Random();
 		for (Route r : routes) {
-			if (r != route && random.nextDouble() <= 0.1 &&
-					r.xCoordinates.contains((int) coordinates.getX()) && r.yCoordinates.contains((int) coordinates.getY())) {
-				route = r;
-				break;
+			int idxY = r.yCoordinates.indexOf((int) coordinates.getY());
+			int idxX = r.xCoordinates.indexOf((int) coordinates.getX());
+
+			if (r != route && iterator > 0 && random.nextDouble() <= 0.1 &&
+					r.xCoordinates.contains((int) coordinates.getX()) && r.yCoordinates.contains((int) coordinates.getY()) &&
+					r.xCoordinates.get(idxX) == coordinates.getX() && r.yCoordinates.get(idxY) == coordinates.getY()) {
+				/*route = r;
+				break;*/
+
+				// not quite sure about this part
+				if (Objects.equals(route.xCoordinates.get(iterator - 1), route.xCoordinates.get(iterator))) {
+					if (idxY + 1 < r.yCoordinates.size() && !Objects.equals(r.yCoordinates.get(idxY), r.yCoordinates.get(idxY + 1))) {
+						route = r;
+						break;
+					}
+				}
+				else if (Objects.equals(route.yCoordinates.get(iterator - 1), route.yCoordinates.get(iterator))) {
+					if (idxX + 1 < r.xCoordinates.size() && !Objects.equals(r.xCoordinates.get(idxX), r.xCoordinates.get(idxX + 1))) {
+						route = r;
+						break;
+					}
+				}
 			}
 		}
 	}

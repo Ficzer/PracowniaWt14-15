@@ -22,7 +22,7 @@ public class WindowApp extends Application {
 		List<Circle> circleList = new ArrayList<>();
 		Simulation simulation = new Simulation();
 
-		for (int j = 0; j < 100; j++) {
+		for (int j = 0; j < 1000; j++) {
 			for (int i = 0; i < simulation.map.vehicles.size(); i++) {
 				Circle circle = new Circle(
 						simulation.getMap().getVehicles().get(i).getCoordinates().getX(),

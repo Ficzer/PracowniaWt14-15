@@ -1,37 +1,44 @@
 package com.pracownia.vanet;
 
-import com.pracownia.vanet.net.Obu;
-import lombok.Getter;
+import javafx.animation.TranslateTransition;
+import javafx.scene.shape.Circle;
+import javafx.util.Duration;
+import lombok.Data;
 
 /**
  * Samochód. Oczywiście trzeba tu by dodać zasięg itp.
  */
+
+
+@Data
 public class Vehicle {
 
 	int id;
-	@Getter private Point coordinates;
-
+	double currentX;
+	double currentY;
+	double range;
 	Route route;
 	int iterator;
-	@Getter	private Obu obu = new Obu();
 
 	//car properties like speed etc
 	double speed;
 
-	public Vehicle(Route route, int id) {
+	public Vehicle(Route route, int id, double range){
 		this.route = route;
 		iterator = 0;
 		this.id = id;
-		this.coordinates = new Point(route.xCoordinates.get(0), route.getYCoordinates().get(0));
+		this.range = range;
 	}
 
-	public void update() {
+	public void update(){
 		if(iterator >= route.yCoordinates.size()){
 			iterator = 0;
 		}
-		coordinates = new Point(route.xCoordinates.get(iterator), route.yCoordinates.get(iterator));
 
-		System.out.println(id + " " + coordinates.getX() + " " + coordinates.getY());
+		currentX = route.xCoordinates.get(iterator);
+		currentY = route.yCoordinates.get(iterator);
+
+		System.out.println(id + " " + currentX + " " + currentY);
 		iterator++;
 	}
 }

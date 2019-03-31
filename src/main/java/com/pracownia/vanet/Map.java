@@ -16,7 +16,7 @@ public class Map {
 	private double height = 270.0;
 
 	List<Route> routes;
-	List<Vehicle> vehicles;
+	ArrayList<Vehicle> vehicles;
 
 	public Map(){
 		ReadRoutes readRoutes = new ReadRoutes("./routes/");
@@ -24,7 +24,7 @@ public class Map {
 		vehicles = new ArrayList<>();
 
 		for(int i = 0; i<routes.size(); i++){
-			vehicles.add(new Vehicle(routes.get(i), i));
+			vehicles.add(new Vehicle(routes.get(i), i, 60));
 		}
 
 

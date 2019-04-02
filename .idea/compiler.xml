@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="PracowniaWt14-15" />
         <module name="repo" />
+        <module name="repo (kopia)" />
         <module name="vanet" />
       </profile>
     </annotationProcessing>

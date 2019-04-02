@@ -34,6 +34,7 @@ public class WindowApp extends Application {
 			}
 		});
 		Simulation simulation = new Simulation();
+
 		for(int i = 0; i<simulation.map.vehicles.size(); i++){
 			Circle circle = circleCreator(simulation.getMap().getVehicles().get(i));
 			Circle range = rangeCreator(simulation.getMap().getVehicles().get(i));
@@ -42,6 +43,7 @@ public class WindowApp extends Application {
 			root.getChildren().add(circle);
 			root.getChildren().add(range);
 		}
+
 		Scene scene = new Scene(root, 450, 270);
 		primaryStage.setTitle("Vanet");
 		primaryStage.setScene(scene);

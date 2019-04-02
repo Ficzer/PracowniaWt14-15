@@ -37,7 +37,7 @@ public class Simulation implements Runnable{
 		int it = 0;
 
 			for (Vehicle vehicle : map.getVehicles()) {
-				vehicle.update();
+				vehicle.update(map.routes);
 				circleList.get(it).setCenterX(vehicle.getCurrentX());
 				circleList.get(it).setCenterY(vehicle.getCurrentY());
 				rangeList.get(it).setCenterX(vehicle.getCurrentX());

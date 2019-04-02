@@ -22,7 +22,7 @@ public class ReadRoutes {
 		try (Stream<Path> paths = Files.walk(Paths.get(fileName))) {
 			paths
 					.filter(o -> o.toString().endsWith(".txt"))
-					.forEach(t -> routes.add(getRoute(fileName + "\\" + t.getFileName().toString())));
+					.forEach(t -> routes.add(getRoute(fileName + "/" + t.getFileName().toString())));
 
 
 			return routes;

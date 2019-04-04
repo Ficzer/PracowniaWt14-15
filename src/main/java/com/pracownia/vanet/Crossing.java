@@ -7,11 +7,12 @@ import java.util.Random;
 @Data
 public class Crossing {
 
-    public static double DETECTION_RANGE = 5.0;
+    public static double DETECTION_RANGE = 1.0;
 
     private Point location;
     private Route routeA;
     private Route routeB;
+    private Vehicle lastTransportedVehicle = new Vehicle();
 
     public Crossing(){
 
@@ -27,9 +28,15 @@ public class Crossing {
 
     public void transportVehicle(Vehicle vehicle)
     {
+        System.out.println("xd");
+        if(vehicle == lastTransportedVehicle)
+            return;
+        System.out.println("XD");
+        lastTransportedVehicle = vehicle;
         Random random = new Random();
         int pom = random.nextInt();
-        if(pom % 3 == 0 || pom % 3 == 1)
+        System.out.println(pom%3);
+        if(Math.abs(pom % 3) == 0 || Math.abs(pom % 3 ) == 1)
         {
             if(vehicle.getRoute() == routeA)
             {
@@ -40,8 +47,27 @@ public class Crossing {
                 vehicle.setRoute(routeA);
             }
 
-            //vehicle.setCurrentLocation(location.getX(), location.getY());
-        }
+            vehicle.setCurrentLocation(new Point(location.getX(), location.getY()));
 
+            if(Math.abs(pom % 3) == 0)
+            {
+                vehicle.setDirection(!vehicle.isDirection());
+            }
+
+        }
+    }
+
+    public double getDistanceToCrossing(Vehicle vehicle)
+    {
+        return Math.sqrt(Math.pow(location.getX() - vehicle.getCurrentLocation().getX(), 2) +
+                Math.pow(location.getY() - vehicle.getCurrentLocation().getY(), 2));
+    }
+
+    public void resetLastTransportedVehicle()
+    {
+        if(getDistanceToCrossing(lastTransportedVehicle) > Crossing.DETECTION_RANGE)
+        {
+            lastTransportedVehicle = new Vehicle();
+        }
     }
 }

@@ -23,6 +23,12 @@ public class Vehicle {
 	private double speed;
 	private boolean direction = true; // True if from starting point to end point
 
+	public Vehicle()
+	{
+		route = new Route();
+		currentLocation = new Point();
+	}
+
 	public Vehicle(Route route, int id, double range, double speed){
 		this.route = route;
 		this.id = id;

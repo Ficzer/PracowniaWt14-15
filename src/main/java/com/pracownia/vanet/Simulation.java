@@ -26,9 +26,11 @@ public class Simulation implements Runnable{
 	public void run(){
 		while (true) {
 			updateVehiclesPosition();
+			checkVehicleCrossing();
+			resetReferences();
 			//showVehiclesConnected();
 			try {
-				Thread.sleep(10);
+				Thread.sleep(5);
 			} catch (InterruptedException e) {
 			}
 		}
@@ -50,7 +52,22 @@ public class Simulation implements Runnable{
 
 	private void checkVehicleCrossing()
 	{
+		for (Vehicle vehicle : map.getVehicles()) {
+			for(Crossing crossing : map.getCrossings()) {
 
+				if(crossing.getDistanceToCrossing(vehicle) < Crossing.DETECTION_RANGE){
+					crossing.transportVehicle(vehicle);
+				}
+			}
+		}
+	}
+
+	private void resetReferences()
+	{
+		for(Crossing crossing : map.getCrossings())
+		{
+			crossing.resetLastTransportedVehicle();
+		}
 	}
 /*
 	private void showVehiclesConnected(){

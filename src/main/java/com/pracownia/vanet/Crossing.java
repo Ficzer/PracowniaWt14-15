@@ -28,14 +28,11 @@ public class Crossing {
 
     public void transportVehicle(Vehicle vehicle)
     {
-        System.out.println("xd");
         if(vehicle == lastTransportedVehicle)
             return;
-        System.out.println("XD");
         lastTransportedVehicle = vehicle;
         Random random = new Random();
         int pom = random.nextInt();
-        System.out.println(pom%3);
         if(Math.abs(pom % 3) == 0 || Math.abs(pom % 3 ) == 1)
         {
             if(vehicle.getRoute() == routeA)

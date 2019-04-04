@@ -2,6 +2,7 @@ package com.pracownia.vanet;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -10,9 +11,9 @@ import java.util.List;
 @Data
 public class Simulation implements Runnable{
 
-	Map map;
-	List<Circle> circleList;
-	List<Circle> rangeList;
+	private Map map;
+	private List<Circle> circleList;
+	private List<Circle> rangeList;
 	Thread tr;
 	public Simulation() {
 		map = new Map();
@@ -25,27 +26,33 @@ public class Simulation implements Runnable{
 	public void run(){
 		while (true) {
 			updateVehiclesPosition();
-			showVehiclesConnected();
+			//showVehiclesConnected();
 			try {
-				Thread.sleep(100);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 			}
 		}
 	}
 
 	private void updateVehiclesPosition() {
+
 		int it = 0;
 
-			for (Vehicle vehicle : map.getVehicles()) {
-				vehicle.update(map.routes);
-				circleList.get(it).setCenterX(vehicle.getCurrentX());
-				circleList.get(it).setCenterY(vehicle.getCurrentY());
-				rangeList.get(it).setCenterX(vehicle.getCurrentX());
-				rangeList.get(it).setCenterY(vehicle.getCurrentY());
-				it++;
-			}
+		for (Vehicle vehicle : map.getVehicles()) {
+			vehicle.update();
+			circleList.get(it).setCenterX(vehicle.getCurrentLocation().getX());
+			circleList.get(it).setCenterY(vehicle.getCurrentLocation().getY());
+			circleList.get(it).getCenterX();
+			circleList.get(it).getCenterY();
+			it++;
+		}
 	}
 
+	private void checkVehicleCrossing()
+	{
+
+	}
+/*
 	private void showVehiclesConnected(){
 		int it = 0;
 		for (Vehicle vehicle : map.getVehicles()) {
@@ -63,6 +70,6 @@ public class Simulation implements Runnable{
 			}
 			it++;
 		}
-	}
+	}*/
 
 }

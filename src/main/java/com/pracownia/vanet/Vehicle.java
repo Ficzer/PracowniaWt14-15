@@ -11,68 +11,56 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-/**
- * Samochód. Oczywiście trzeba tu by dodać zasięg itp.
- */
-
 
 @Data
 public class Vehicle {
 
-	int id;
-	double currentX;
-	double currentY;
-	double range;
-	Route route;
-	int iterator;
+	private int id;
+	private Point currentLocation;
+	private Route route;
+	private double range;
+	private int iterator;
+	private double speed;
+	private boolean direction = true; // True if from starting point to end point
 
-	//car properties like speed etc
-	double speed;
-
-	public Vehicle(Route route, int id, double range){
+	public Vehicle(Route route, int id, double range, double speed){
 		this.route = route;
-		iterator = 0;
 		this.id = id;
 		this.range = range;
+		this.speed = speed + 0.001;
+		this.currentLocation = new Point(route.getStartPoint().getX(), route.getStartPoint().getY());
 	}
 
-	public void update(List<Route> routes){
-		if(iterator >= route.yCoordinates.size()){
-			iterator = 0;
+	public void update(){
+
+		double distanceToEndPoint = Math.sqrt(Math.pow(route.getEndPoint().getX() - currentLocation.getX(), 2) +
+				Math.pow(route.getEndPoint().getY() - currentLocation.getY(), 2));
+
+		double cos = (route.getEndPoint().getX() - currentLocation.getX()) / distanceToEndPoint;
+		double sin = (route.getEndPoint().getY() - currentLocation.getY()) / distanceToEndPoint;
+
+		double distanceToStart;
+
+		if(direction)
+		{
+			distanceToStart = Math.sqrt(Math.pow(currentLocation.getX()-route.getStartPoint().getX(), 2) +
+					Math.pow(currentLocation.getY()-route.getStartPoint().getY(), 2));
+			currentLocation.setX(currentLocation.getX() + cos * speed);
+			currentLocation.setY(currentLocation.getY() + sin * speed);
+		}
+		else
+		{
+			distanceToStart = Math.sqrt(Math.pow(currentLocation.getX()-route.getEndPoint().getX(), 2) +
+					Math.pow(currentLocation.getY()-route.getEndPoint().getY(), 2));
+
+			currentLocation.setX(currentLocation.getX() - cos * speed);
+			currentLocation.setY(currentLocation.getY() - sin * speed);
+
 		}
 
-		currentX = route.xCoordinates.get(iterator);
-		currentY = route.yCoordinates.get(iterator);
-
-		System.out.println(id + " " + currentX + " " + currentY);
-		iterator++;
-
-		Random random = new Random();
-		for (Route r : routes) {
-			int idxY = r.yCoordinates.indexOf((int) currentY);
-			int idxX = r.xCoordinates.indexOf((int) currentX);
-
-			if (r != route && iterator > 0 && random.nextDouble() <= 0.2 &&
-					r.xCoordinates.contains((int) currentX) && r.yCoordinates.contains((int) currentY) &&
-					r.xCoordinates.get(idxY) == currentX && r.yCoordinates.get(idxY) == currentY) {
-				/*route = r;
-				break;*/
-
-				if (Objects.equals(route.xCoordinates.get(iterator - 1), route.xCoordinates.get(iterator))) {
-					if (idxY + 1 < r.yCoordinates.size() && !Objects.equals(r.yCoordinates.get(idxY), r.yCoordinates.get(idxY + 1))) {
-						route = r;
-						break;
-					}
-				}
-				else if (Objects.equals(route.yCoordinates.get(iterator - 1), route.yCoordinates.get(iterator))) {
-					if (idxY + 1 < r.xCoordinates.size() && !Objects.equals(r.xCoordinates.get(idxY), r.xCoordinates.get(idxY + 1))) {
-						route = r;
-						break;
-					}
-				}
-
-				// TODO: add check if there's another vehicle already
-			}
+		if(distanceToStart >= route.getDistance())
+		{
+			direction = !direction;
 		}
 	}
 }

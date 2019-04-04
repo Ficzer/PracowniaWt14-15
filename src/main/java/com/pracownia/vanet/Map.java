@@ -2,6 +2,7 @@ package com.pracownia.vanet;
 
 import lombok.Data;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,22 +13,29 @@ import java.util.List;
 @Data
 public class Map {
 
-	private double width = 450.0;
-	private double height = 270.0;
+	private double width = 1000.0;
+	private double height = 900.0;
 
 	List<Route> routes;
-	ArrayList<Vehicle> vehicles;
+	List<Vehicle> vehicles;
+	List<Crossing> crossings;
+
 
 	public Map(){
-		ReadRoutes readRoutes = new ReadRoutes("./routes/");
-		routes = readRoutes.readAllRoutes();
+
+		routes = new ArrayList<>();
 		vehicles = new ArrayList<>();
+		crossings = new ArrayList<>();
+		initMap();
 
-		for(int i = 0; i<routes.size(); i++){
-			vehicles.add(new Vehicle(routes.get(i), i, 60));
-		}
+	}
 
+	private void initMap()
+	{
+		routes.add(new Route(200.0, 100.0, 200.0, 700.0));
+		routes.add(new Route(100.0, 200.0, 900.0, 200.0));
 
+		vehicles.add(new Vehicle(routes.get(0), 0, 10.0, 0.4));
 	}
 
 

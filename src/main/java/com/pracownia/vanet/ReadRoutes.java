@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public class ReadRoutes {
 
-	private String fileName;
+	/*private String fileName;
 
 	public ReadRoutes(String fileName) {
 		this.fileName = fileName;
@@ -56,5 +56,5 @@ public class ReadRoutes {
 			e.printStackTrace();
 		}
 		return null;
-	}
+	}*/
 }

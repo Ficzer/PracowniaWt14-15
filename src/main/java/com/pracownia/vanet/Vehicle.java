@@ -7,6 +7,7 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -22,6 +23,7 @@ public class Vehicle {
 	private int iterator;
 	private double speed;
 	private boolean direction = true; // True if from starting point to end point
+	private List<Vehicle> vehicles = new ArrayList<>();
 
 	public Vehicle()
 	{
@@ -37,7 +39,26 @@ public class Vehicle {
 		this.currentLocation = new Point(route.getStartPoint().getX(), route.getStartPoint().getY());
 	}
 
-	public void update(){
+	private void updateVehicles(Map map) {
+		for (Vehicle v : map.vehicles) {
+			if (v == this)
+				continue;
+
+			if (distance(this.currentLocation, v.currentLocation) < range) {
+				if (!vehicles.contains(v)) {
+					vehicles.add(v);
+				}
+			}
+			else if (vehicles.contains(v)) {
+				vehicles.remove(v);
+			}
+		}
+
+		int i = 0;
+	}
+
+	public void update(Map map){
+		updateVehicles(map);
 
 		double distanceToEndPoint = Math.sqrt(Math.pow(route.getEndPoint().getX() - currentLocation.getX(), 2) +
 				Math.pow(route.getEndPoint().getY() - currentLocation.getY(), 2));
@@ -68,5 +89,16 @@ public class Vehicle {
 		{
 			direction = !direction;
 		}
+	}
+
+	private double distance(Point a, Point b) {
+		return Math.sqrt(Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getY() - b.getY(), 2));
+	}
+
+	@Override
+	public String toString() {
+		return "ID:               " + id + '\n' +
+			   "Current location: " + currentLocation + '\n' +
+			   "Neighbors:        " + vehicles.size() + '\n';
 	}
 }

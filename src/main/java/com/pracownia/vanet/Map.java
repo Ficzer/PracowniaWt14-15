@@ -53,6 +53,8 @@ public class Map {
 		crossings.add(new Crossing(new Point(800.0, 600.0), routes.get(3), routes.get(6)));
 
 		vehicles.add(new Vehicle(routes.get(0), 0, 10.0, 0.4));
+		vehicles.add(new Vehicle(routes.get(1), 1, 10.0, 1.));
+		vehicles.add(new Vehicle(routes.get(1), 2, 20., 1.));
 	}
 
 

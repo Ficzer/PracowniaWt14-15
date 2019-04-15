@@ -7,10 +7,8 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.sql.Timestamp;
+import java.util.*;
 
 
 @Data
@@ -24,6 +22,33 @@ public class Vehicle {
 	private double speed;
 	private boolean direction = true; // True if from starting point to end point
 	private List<Vehicle> vehicles = new ArrayList<>();
+
+	private Date date;
+	private Point previousCrossing;
+
+	public double getSpeed() {
+		return speed;
+	}
+
+	public Point getCurrentLocation() {
+		return currentLocation;
+	}
+
+	public Point getPreviousCrossing() {
+		return previousCrossing;
+	}
+
+	public void setPreviousCrossing(Point previousCrossing) {
+		this.previousCrossing = previousCrossing;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
 
 	public Vehicle()
 	{

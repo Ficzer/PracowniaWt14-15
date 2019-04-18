@@ -1,6 +1,7 @@
 package com.pracownia.vanet;
 
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -29,6 +30,15 @@ public class ShapesCreator
         circle.setCenterY(eventSource.getLocalization().getY());
         circle.setFill(Color.RED);
         circle.setRadius(8.0);
+        return circle;
+    }
+
+    private Circle circleCreator(StationaryNetworkPoint stationaryNetworkPoint){
+        Circle circle = new Circle();
+        circle.setCenterX(stationaryNetworkPoint.getCurrentLocation().getX());
+        circle.setCenterY(stationaryNetworkPoint.getCurrentLocation().getY());
+        circle.setFill(Color.BLUE);
+        circle.setRadius(6.0);
         return circle;
     }
 
@@ -62,6 +72,17 @@ public class ShapesCreator
         return line;
     }
 
+    private Label labelCreator(NetworkPoint networkPoint)
+    {
+        Label label = new Label();
+        label.setText(String.valueOf(networkPoint.getCollectedEvents().size()));
+        label.setLayoutX(networkPoint.getCurrentLocation().getX());
+        label.setLayoutY(networkPoint.getCurrentLocation().getY());
+
+        return label;
+
+    }
+
     public void setRoutesLines(Simulation simulation)
     {
         for(int i=0; i<simulation.getMap().getRoutes().size(); i++)
@@ -92,6 +113,32 @@ public class ShapesCreator
             Circle rangeCircle = rangeCreator(simulation.getMap().getEventSources().get(i));
             root.getChildren().add(circle);
             root.getChildren().add(rangeCircle);
+        }
+    }
+
+    public void setStationaryPointCircles(Simulation simulation)
+    {
+        for(int i=0; i<simulation.getMap().getStationaryNetworkPoints().size(); i++)
+        {
+            Circle circle = circleCreator(simulation.getMap().getStationaryNetworkPoints().get(i));
+            simulation.getStationaryCirclelist().add(circle);
+            root.getChildren().add(circle);
+        }
+    }
+
+    public void setLabels(Simulation simulation, int amount)
+    {
+        for(int i=0; i<simulation.getMap().getStationaryNetworkPoints().size(); i++)
+        {
+            Label label = labelCreator(simulation.getMap().getStationaryNetworkPoints().get(i));
+            root.getChildren().add(label);
+        }
+
+        for(int i=simulation.getMap().getVehicles().size() - amount; i<simulation.getMap().getVehicles().size(); i++)
+        {
+            Label label = labelCreator(simulation.getMap().getVehicles().get(i));
+            simulation.getLabelList().add(label);
+            root.getChildren().add(label);
         }
     }
 }

@@ -22,6 +22,7 @@ public class Map {
 	private List<Vehicle> vehicles;
 	private List<Crossing> crossings;
 	private List<EventSource> eventSources;
+	private List<StationaryNetworkPoint> stationaryNetworkPoints;
 
 
 
@@ -31,6 +32,7 @@ public class Map {
 		vehicles = new ArrayList<>();
 		crossings = new ArrayList<>();
 		eventSources = new ArrayList<>();
+		stationaryNetworkPoints = new ArrayList<>();
 		initMap();
 
 	}
@@ -57,10 +59,9 @@ public class Map {
 		crossings.add(new Crossing(new Point(800.0, 400.0), routes.get(3), routes.get(5)));
 		crossings.add(new Crossing(new Point(800.0, 600.0), routes.get(3), routes.get(6)));
 
-
-		//vehicles.add(new Vehicle(routes.get(0), 0, 10.0, 0.4));
-		//vehicles.add(new Vehicle(routes.get(1), 1, 10.0, 1.));
-		//vehicles.add(new Vehicle(routes.get(1), 2, 20., 1.));
+		stationaryNetworkPoints.add(new StationaryNetworkPoint(0, new Point(480.0, 210.0), 30.0));
+		stationaryNetworkPoints.add(new StationaryNetworkPoint(1, new Point(260.0, 610.0), 30.0));
+		stationaryNetworkPoints.add(new StationaryNetworkPoint(2, new Point(480.0, 610.0), 30.0));
 
 		eventSources.add(new EventSource(0, "Car Accident", "Serious Car Accident",
 				new Point(250.0, 210.0), new Date(), 20.0, EventType.CAR_ACCIDENT));

@@ -1,5 +1,6 @@
 package com.pracownia.vanet;
 
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -14,11 +15,17 @@ public class Simulation implements Runnable{
 	private Map map;
 	private List<Circle> circleList;
 	private List<Circle> rangeList;
+	private List<Label> labelList;
+	private List<Circle> stationaryCirclelist;
+
 	Thread tr;
 	public Simulation() {
 		map = new Map();
 		circleList = new ArrayList<>();
 		rangeList = new ArrayList<>();
+		labelList = new ArrayList<>();
+		stationaryCirclelist = new ArrayList<>();
+
 		tr = new Thread(this);
 	}
 
@@ -29,6 +36,7 @@ public class Simulation implements Runnable{
 			checkVehicleCrossing();
 			resetReferences();
 			checkVehicleEventSource();
+			updateStationaryPoints();
 
 			//showVehiclesConnected();
 			try {
@@ -50,6 +58,11 @@ public class Simulation implements Runnable{
 				circleList.get(it).setCenterY(vehicle.getCurrentLocation().getY());
 				rangeList.get(it).setCenterX(vehicle.getCurrentLocation().getX());
 				rangeList.get(it).setCenterY(vehicle.getCurrentLocation().getY());
+				//labelList.get(it).setText(String.valueOf(vehicle.getCollectedEvents().size()));
+				if(vehicle.getCollectedEvents().size() > 0)
+					circleList.get(it).setFill(Color.BROWN);
+				labelList.get(it).setLayoutX(vehicle.getCurrentLocation().getX() + 7.0);
+				labelList.get(it).setLayoutY(vehicle.getCurrentLocation().getY());
 			}
 			catch (IndexOutOfBoundsException e)
 			{
@@ -98,6 +111,25 @@ public class Simulation implements Runnable{
 					vehicle.getCollectedEvents().add(eventSource.getEvent());
 				}
 			}
+		}
+	}
+
+	private void updateStationaryPoints()
+	{
+		int it = 0;
+		for(StationaryNetworkPoint s : map.getStationaryNetworkPoints())
+		{
+			s.update(map);
+			try
+			{
+				if (s.getCollectedEvents().size() > 0)
+					stationaryCirclelist.get(it).setFill(Color.CYAN);
+			}
+			catch (IndexOutOfBoundsException e)
+			{
+				e.printStackTrace();
+			}
+			it++;
 		}
 	}
 

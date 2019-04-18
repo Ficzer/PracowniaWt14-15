@@ -38,6 +38,7 @@ public class EventSource
                             "Localisation: " + localization + "\r\n" +
                             "Event type: " + eventType + "\r\n" +
                             "Event Date: " + eventDate + "\r\n");
+
         return event;
     }
 

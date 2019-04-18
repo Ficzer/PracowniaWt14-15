@@ -1,38 +1,30 @@
 package com.pracownia.vanet;
 
-import javafx.scene.paint.Color;
-import lombok.Getter;
-import javafx.animation.TranslateTransition;
-import javafx.scene.shape.Circle;
-import javafx.util.Duration;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 
 
 @Data
-public class Vehicle {
+public class Vehicle extends NetworkPoint{
 
 	private int id;
-	private Point currentLocation;
 	private Route route;
-	private double range;
 	private int iterator;
 	private double speed;
 	private boolean direction = true; // True if from starting point to end point
-	private List<Vehicle> connectedVehicles = new ArrayList<>();
-	private List<Event> collectedEvents = new ArrayList<>();
+	private List<StationaryNetworkPoint> connectedPoints = new ArrayList<>();
 
 	public Vehicle()
 	{
+		super();
 		route = new Route();
 		currentLocation = new Point();
 	}
 
 	public Vehicle(Route route, int id, double range, double speed){
+		super();
 		this.route = route;
 		this.id = id;
 		this.range = range;
@@ -40,10 +32,14 @@ public class Vehicle {
 		this.currentLocation = new Point(route.getStartPoint().getX(), route.getStartPoint().getY());
 	}
 
-	private void updateConnectedVehicles(Map map) {
+	@Override
+	public void updateConnectedPoints(Map map)
+	{
 		for (Vehicle v : map.getVehicles()) {
 			if (v == this)
+			{
 				continue;
+			}
 
 			if (distance(this.currentLocation, v.currentLocation) < range) {
 				if (!connectedVehicles.contains(v)) {
@@ -54,15 +50,36 @@ public class Vehicle {
 				connectedVehicles.remove(v);
 			}
 		}
+
+		for (StationaryNetworkPoint s : map.getStationaryNetworkPoints())
+		{
+			if (distance(this.currentLocation, s.getCurrentLocation()) < range)
+			{
+				if (!connectedPoints.contains(s)) {
+					connectedPoints.add(s);
+				}
+			}
+			else
+			{
+				if (isPointInList(s, connectedPoints))
+				{
+					connectedPoints.remove(s);
+				}
+			}
+		}
+
+
 	}
 
-	private void sendEventsToConnectedVehicles()
+	public void sendEventsToConnectedPoints()
 	{
-		boolean flag = false;
-		for (Vehicle connectedVehicle : connectedVehicles)
+		boolean flag;
+
+		for (NetworkPoint connectedVehicle : connectedVehicles)
 		{
 			for (Event event : collectedEvents)
 			{
+				flag = false;
 				for (Event outEvent : connectedVehicle.getCollectedEvents())
 				{
 					if(event.getId() == outEvent.getId())
@@ -78,11 +95,33 @@ public class Vehicle {
 				}
 			}
 		}
+
+		for (NetworkPoint connectedPoint : connectedPoints)
+		{
+			for (Event event : collectedEvents)
+			{
+				flag = false;
+				for (Event outEvent : connectedPoint.getCollectedEvents())
+				{
+					if(event.getId() == outEvent.getId())
+					{
+						flag = true;
+					}
+				}
+
+				if(!flag)
+				{
+					connectedPoint.getCollectedEvents().add(event);
+					System.out.println("Event shared");
+				}
+			}
+		}
 	}
 
+	@Override
 	public void update(Map map){
-		updateConnectedVehicles(map);
-		sendEventsToConnectedVehicles();
+		updateConnectedPoints(map);
+		sendEventsToConnectedPoints();
 
 		double distanceToEndPoint = Math.sqrt(Math.pow(route.getEndPoint().getX() - currentLocation.getX(), 2) +
 				Math.pow(route.getEndPoint().getY() - currentLocation.getY(), 2));
@@ -115,8 +154,18 @@ public class Vehicle {
 		}
 	}
 
-	private double distance(Point a, Point b) {
-		return Math.sqrt(Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getY() - b.getY(), 2));
+	public boolean isPointInList(StationaryNetworkPoint point, List<StationaryNetworkPoint> list)
+	{
+		boolean result = false;
+		for (StationaryNetworkPoint s : list)
+		{
+			if(s.getId() == point.getId())
+			{
+				result = true;
+			}
+
+		}
+		return result;
 	}
 
 	@Override

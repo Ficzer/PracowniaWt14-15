@@ -36,6 +36,7 @@ public class WindowApp extends Application {
 
 		shapesCreator.setRoutesLines(simulation);
 		shapesCreator.setSourceEventCircles(simulation);
+		shapesCreator.setStationaryPointCircles(simulation);
 
 		setInterface(simulation);
 
@@ -79,6 +80,7 @@ public class WindowApp extends Application {
 		spawnVehiclesButton.setOnAction(e -> {
 			simulation.getMap().addVehicles(Integer.parseInt(vehiclesAmountField.getText()));
 			shapesCreator.setVehicleCircles(simulation, Integer.parseInt(vehiclesAmountField.getText()));
+			shapesCreator.setLabels(simulation, Integer.parseInt(vehiclesAmountField.getText()));
 
 		});
 

@@ -56,8 +56,33 @@ public class Vehicle {
 		}
 	}
 
+	private void sendEventsToConnectedVehicles()
+	{
+		boolean flag = false;
+		for (Vehicle connectedVehicle : connectedVehicles)
+		{
+			for (Event event : collectedEvents)
+			{
+				for (Event outEvent : connectedVehicle.getCollectedEvents())
+				{
+					if(event.getId() == outEvent.getId())
+					{
+						flag = true;
+					}
+				}
+
+				if(!flag)
+				{
+					connectedVehicle.getCollectedEvents().add(event);
+					System.out.println("Event shared");
+				}
+			}
+		}
+	}
+
 	public void update(Map map){
 		updateConnectedVehicles(map);
+		sendEventsToConnectedVehicles();
 
 		double distanceToEndPoint = Math.sqrt(Math.pow(route.getEndPoint().getX() - currentLocation.getX(), 2) +
 				Math.pow(route.getEndPoint().getY() - currentLocation.getY(), 2));

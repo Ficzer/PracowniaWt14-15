@@ -72,7 +72,7 @@ public class Map {
 
 		for (int i=0; i<amount; i++)
 		{
-			vehicles.add(new Vehicle(routes.get(i%5), i, 40.0, random.nextDouble()));
+			vehicles.add(new Vehicle(routes.get(i%5), i, 40.0, random.nextDouble() / 2.0 + 0.5));
 		}
 	}
 

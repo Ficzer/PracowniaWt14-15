@@ -7,6 +7,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -21,6 +24,7 @@ import java.util.List;
 public class WindowApp extends Application {
 
 	private Group root = new Group();
+	private boolean isRangeRendered = false;
 
 	public static void main(String[] args){
 		launch(args);
@@ -36,12 +40,14 @@ public class WindowApp extends Application {
 				System.exit(0);
 			}
 		});
+
 		Simulation simulation = new Simulation();
 
 		setRoutesLines(simulation);
-		setVehicleCircles(simulation);
+		//setVehicleCircles(simulation);
+		setInterface(simulation);
 
-		Scene scene = new Scene(root, 1000, 800);
+		Scene scene = new Scene(root, 1100, 800);
 		primaryStage.setTitle("Vanet");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -63,7 +69,7 @@ public class WindowApp extends Application {
 		circle.setCenterX(vehicle.getCurrentLocation().getX());
 		circle.setCenterY(vehicle.getCurrentLocation().getY());
 		circle.setFill(Color.TRANSPARENT);
-		circle.setStroke(Color.BLACK);
+		circle.setStroke(Color.TRANSPARENT);
 		return circle;
 	}
 
@@ -86,14 +92,54 @@ public class WindowApp extends Application {
 		}
 	}
 
-	private void setVehicleCircles(Simulation simulation)
+	private void setVehicleCircles(Simulation simulation, int amount)
 	{
-		for(int i=0; i<simulation.getMap().getVehicles().size(); i++)
+		for(int i=simulation.getMap().getVehicles().size() - amount; i<simulation.getMap().getVehicles().size(); i++)
 		{
 			Circle circle = circleCreator(simulation.getMap().getVehicles().get(i));
+			Circle rangeCircle = rangeCreator(simulation.getMap().getVehicles().get(i));
 			simulation.getCircleList().add(circle);
+			simulation.getRangeList().add(rangeCircle);
 			root.getChildren().add(circle);
+			root.getChildren().add(rangeCircle);
 		}
+	}
+
+	private void setInterface(Simulation simulation)
+	{
+		Button showRangeButton = new Button("Show Range");
+		Button spawnVehiclesButton = new Button("Spawn Vehicles");
+		TextField vehiclesAmountField = new TextField();
+		Label vehiclesAmountLabel = new Label("Vehicle Amount");
+
+		showRangeButton.setLayoutX(950.0);
+		showRangeButton.setLayoutY(100.0);
+		spawnVehiclesButton.setLayoutX(950.0);
+		spawnVehiclesButton.setLayoutY(130.0);
+		vehiclesAmountLabel.setLayoutX(950.0);
+		vehiclesAmountLabel.setLayoutY(160.0);
+		vehiclesAmountField.setLayoutX(950.0);
+		vehiclesAmountField.setLayoutY(190.0);
+;
+		showRangeButton.setOnAction(e -> {
+			isRangeRendered = !isRangeRendered;
+			if(isRangeRendered)
+			{
+				simulation.switchOnRangeCircles();
+			}
+			else
+			{
+				simulation.switchOffRangeCircles();
+			}
+		});
+
+		spawnVehiclesButton.setOnAction(e -> {
+			simulation.getMap().addVehicles(Integer.parseInt(vehiclesAmountField.getText()));
+			setVehicleCircles(simulation, Integer.parseInt(vehiclesAmountField.getText()));
+
+		});
+
+		root.getChildren().addAll(showRangeButton, spawnVehiclesButton, vehiclesAmountField, vehiclesAmountLabel);
 	}
 
 

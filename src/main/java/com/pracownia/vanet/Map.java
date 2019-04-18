@@ -4,7 +4,9 @@ import lombok.Data;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Przechoowuje samochody i ich powiązania z trasami.
@@ -16,9 +18,11 @@ public class Map {
 	private double width = 1000.0;
 	private double height = 900.0;
 
-	List<Route> routes;
-	List<Vehicle> vehicles;
-	List<Crossing> crossings;
+	private List<Route> routes;
+	private List<Vehicle> vehicles;
+	private List<Crossing> crossings;
+	private List<EventSource> eventSources;
+
 
 
 	public Map(){
@@ -26,6 +30,7 @@ public class Map {
 		routes = new ArrayList<>();
 		vehicles = new ArrayList<>();
 		crossings = new ArrayList<>();
+		eventSources = new ArrayList<>();
 		initMap();
 
 	}
@@ -52,9 +57,23 @@ public class Map {
 		crossings.add(new Crossing(new Point(800.0, 400.0), routes.get(3), routes.get(5)));
 		crossings.add(new Crossing(new Point(800.0, 600.0), routes.get(3), routes.get(6)));
 
-		vehicles.add(new Vehicle(routes.get(0), 0, 10.0, 0.4));
-		vehicles.add(new Vehicle(routes.get(1), 1, 10.0, 1.));
-		vehicles.add(new Vehicle(routes.get(1), 2, 20., 1.));
+
+		//vehicles.add(new Vehicle(routes.get(0), 0, 10.0, 0.4));
+		//vehicles.add(new Vehicle(routes.get(1), 1, 10.0, 1.));
+		//vehicles.add(new Vehicle(routes.get(1), 2, 20., 1.));
+
+		eventSources.add(new EventSource(0, "Car Accident", "Serious Car Accident",
+				new Point(250.0, 210.0), new Date(), 20.0, EventType.CAR_ACCIDENT));
+	}
+
+	public void addVehicles(int amount)
+	{
+		Random random = new Random();
+
+		for (int i=0; i<amount; i++)
+		{
+			vehicles.add(new Vehicle(routes.get(i%5), i, 40.0, random.nextDouble()));
+		}
 	}
 
 

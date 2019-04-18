@@ -28,6 +28,8 @@ public class Simulation implements Runnable{
 			updateVehiclesPosition();
 			checkVehicleCrossing();
 			resetReferences();
+			checkVehicleEventSource();
+
 			//showVehiclesConnected();
 			try {
 				Thread.sleep(5);
@@ -42,10 +44,17 @@ public class Simulation implements Runnable{
 
 		for (Vehicle vehicle : map.getVehicles()) {
 			vehicle.update(map);
-			circleList.get(it).setCenterX(vehicle.getCurrentLocation().getX());
-			circleList.get(it).setCenterY(vehicle.getCurrentLocation().getY());
-			circleList.get(it).getCenterX();
-			circleList.get(it).getCenterY();
+			try
+			{
+				circleList.get(it).setCenterX(vehicle.getCurrentLocation().getX());
+				circleList.get(it).setCenterY(vehicle.getCurrentLocation().getY());
+				rangeList.get(it).setCenterX(vehicle.getCurrentLocation().getX());
+				rangeList.get(it).setCenterY(vehicle.getCurrentLocation().getY());
+			}
+			catch (IndexOutOfBoundsException e)
+			{
+				//e.printStackTrace();
+			}
 			it++;
 		}
 	}
@@ -69,6 +78,45 @@ public class Simulation implements Runnable{
 			crossing.resetLastTransportedVehicle();
 		}
 	}
+
+	private void checkVehicleEventSource()
+	{
+		for (Vehicle vehicle : map.getVehicles())
+		{
+			for (EventSource eventSource : map.getEventSources())
+			{
+				if(eventSource.isInRange(vehicle.getCurrentLocation()))
+				{
+					for (Event event : vehicle.getCollectedEvents())
+					{
+						if(event.getId() == eventSource.getId())
+						{
+							return;
+						}
+					}
+
+					vehicle.getCollectedEvents().add(eventSource.getEvent());
+				}
+			}
+		}
+	}
+
+	public void switchOffRangeCircles()
+	{
+		for(Circle rangeCircle : rangeList)
+		{
+			rangeCircle.setStroke(Color.TRANSPARENT);
+		}
+	}
+
+	public void switchOnRangeCircles()
+	{
+		for(Circle rangeCircle : rangeList)
+		{
+			rangeCircle.setStroke(Color.BLACK);
+		}
+	}
+
 /*
 	private void showVehiclesConnected(){
 		int it = 0;

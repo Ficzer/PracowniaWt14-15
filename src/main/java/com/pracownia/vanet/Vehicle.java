@@ -23,7 +23,8 @@ public class Vehicle {
 	private int iterator;
 	private double speed;
 	private boolean direction = true; // True if from starting point to end point
-	private List<Vehicle> vehicles = new ArrayList<>();
+	private List<Vehicle> connectedVehicles = new ArrayList<>();
+	private List<Event> collectedEvents = new ArrayList<>();
 
 	public Vehicle()
 	{
@@ -39,26 +40,24 @@ public class Vehicle {
 		this.currentLocation = new Point(route.getStartPoint().getX(), route.getStartPoint().getY());
 	}
 
-	private void updateVehicles(Map map) {
-		for (Vehicle v : map.vehicles) {
+	private void updateConnectedVehicles(Map map) {
+		for (Vehicle v : map.getVehicles()) {
 			if (v == this)
 				continue;
 
 			if (distance(this.currentLocation, v.currentLocation) < range) {
-				if (!vehicles.contains(v)) {
-					vehicles.add(v);
+				if (!connectedVehicles.contains(v)) {
+					connectedVehicles.add(v);
 				}
 			}
-			else if (vehicles.contains(v)) {
-				vehicles.remove(v);
+			else if (connectedVehicles.contains(v)) {
+				connectedVehicles.remove(v);
 			}
 		}
-
-		int i = 0;
 	}
 
 	public void update(Map map){
-		updateVehicles(map);
+		updateConnectedVehicles(map);
 
 		double distanceToEndPoint = Math.sqrt(Math.pow(route.getEndPoint().getX() - currentLocation.getX(), 2) +
 				Math.pow(route.getEndPoint().getY() - currentLocation.getY(), 2));
@@ -99,6 +98,6 @@ public class Vehicle {
 	public String toString() {
 		return "ID:               " + id + '\n' +
 			   "Current location: " + currentLocation + '\n' +
-			   "Neighbors:        " + vehicles.size() + '\n';
+			   "Neighbors:        " + connectedVehicles.size() + '\n';
 	}
 }

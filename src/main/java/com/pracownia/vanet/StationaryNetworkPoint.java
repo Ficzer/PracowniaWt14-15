@@ -18,8 +18,10 @@ public class StationaryNetworkPoint extends NetworkPoint
         for(Vehicle v : this.connectedVehicles){
             if(AntyBogus.vehiclesToIncreaseTrustLevel.contains(v)){
                 increaseVehicleTrustLevel(v);
+                this.connectedVehicles.remove(v);
             } else if(AntyBogus.vehiclesToDecreaseTrustLevel.contains(v)){
                 decreaseVehicleTrustLevel(v);
+                this.connectedVehicles.remove(v);
             }
         }
     }

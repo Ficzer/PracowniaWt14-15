@@ -4,6 +4,7 @@ import lombok.Data;
 import javafx.animation.TranslateTransition;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 
 @Data
+@EqualsAndHashCode(callSuper=true)
 public class Vehicle extends NetworkPoint{
 
 	int id;

@@ -1,10 +1,23 @@
 package com.pracownia.vanet;
 
 import lombok.Data;
+import javafx.animation.TranslateTransition;
+import javafx.scene.shape.Circle;
+import javafx.util.Duration;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+	int id;
+	double currentX;
+	double currentY;
+	Route route;
+	int iterator;
+	@Getter
+	@Setter
+	double trustLevel;
 
 @Data
 public class Vehicle extends NetworkPoint{

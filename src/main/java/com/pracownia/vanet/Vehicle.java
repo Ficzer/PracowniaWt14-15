@@ -10,6 +10,11 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+@Data
+public class Vehicle extends NetworkPoint{
+
 	int id;
 	double currentX;
 	double currentY;
@@ -17,14 +22,7 @@ import java.util.List;
 	int iterator;
 	@Getter
 	@Setter
-	double trustLevel;
-
-@Data
-public class Vehicle extends NetworkPoint{
-
-	private int id;
-	private Route route;
-	private int iterator;
+	public double trustLevel;
 	private double speed;
 	private boolean direction = true; // True if from starting point to end point
 	private List<StationaryNetworkPoint> connectedPoints = new ArrayList<>();
@@ -33,6 +31,7 @@ public class Vehicle extends NetworkPoint{
 	{
 		super();
 		route = new Route();
+		trustLevel = 50;
 		currentLocation = new Point();
 	}
 
@@ -42,6 +41,7 @@ public class Vehicle extends NetworkPoint{
 		this.id = id;
 		this.range = range;
 		this.speed = speed + 0.001;
+		trustLevel = 50;
 		this.currentLocation = new Point(route.getStartPoint().getX(), route.getStartPoint().getY());
 	}
 
@@ -101,10 +101,10 @@ public class Vehicle extends NetworkPoint{
 					}
 				}
 
-				if(!flag)
+				if(!flag && this.trustLevel >= 50)
 				{
 					connectedVehicle.getCollectedEvents().add(event);
-					System.out.println("Event shared");
+					System.out.println("1Event sharedd");
 				}
 			}
 		}
@@ -122,10 +122,10 @@ public class Vehicle extends NetworkPoint{
 					}
 				}
 
-				if(!flag)
+				if(!flag && this.trustLevel >= 50)
 				{
 					connectedPoint.getCollectedEvents().add(event);
-					System.out.println("Event shared");
+					System.out.println("2Event shared");
 				}
 			}
 		}

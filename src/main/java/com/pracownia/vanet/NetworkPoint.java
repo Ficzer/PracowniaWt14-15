@@ -65,7 +65,7 @@ public abstract class NetworkPoint
                 if(!flag)
                 {
                     connectedVehicle.getCollectedEvents().add(event);
-                    System.out.println("Event shared");
+                    System.out.println("Event shared from Stationary to Vehicle");
                 }
             }
         }

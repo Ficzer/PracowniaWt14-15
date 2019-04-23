@@ -31,7 +31,7 @@ public class Vehicle extends NetworkPoint{
 	{
 		super();
 		route = new Route();
-		trustLevel = 50;
+		trustLevel = 0.5;
 		currentLocation = new Point();
 	}
 
@@ -41,7 +41,7 @@ public class Vehicle extends NetworkPoint{
 		this.id = id;
 		this.range = range;
 		this.speed = speed + 0.001;
-		trustLevel = 50;
+		trustLevel = 0.5;
 		this.currentLocation = new Point(route.getStartPoint().getX(), route.getStartPoint().getY());
 	}
 
@@ -101,10 +101,10 @@ public class Vehicle extends NetworkPoint{
 					}
 				}
 
-				if(!flag && this.trustLevel >= 50)
+				if(!flag && this.trustLevel >= 0.5)
 				{
 					connectedVehicle.getCollectedEvents().add(event);
-					System.out.println("1Event sharedd");
+					System.out.println("Event shared from Vehicle to Vehicle");
 				}
 			}
 		}
@@ -122,10 +122,10 @@ public class Vehicle extends NetworkPoint{
 					}
 				}
 
-				if(!flag && this.trustLevel >= 50)
+				if(!flag && this.trustLevel >= 0.5)
 				{
 					connectedPoint.getCollectedEvents().add(event);
-					System.out.println("2Event shared");
+					System.out.println("Event shared from Vehicle to Stationary");
 				}
 			}
 		}

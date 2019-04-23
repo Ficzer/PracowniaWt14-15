@@ -120,6 +120,7 @@ public class Simulation implements Runnable{
 		for(StationaryNetworkPoint s : map.getStationaryNetworkPoints())
 		{
 			s.update(map);
+			s.checkIfChangeVehicleTrustLevel();
 			try
 			{
 				if (s.getCollectedEvents().size() > 0)

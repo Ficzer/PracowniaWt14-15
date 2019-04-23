@@ -5,35 +5,54 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class AntyBogus {
     private static final int CONFIRMATION_LEVEL = 15;
     private static final double TRUST_LEVEL_BONUS = 1.0;
     private static final double THRESH_HOLD = 10E-15;
-    private HashMap<String, ObservableList<Vehicle>> eventsByVehicle;
-    private List<String> confirmedEvents;
+    private static ConcurrentMap<Event, ObservableList<Vehicle>> eventsByVehicle;
+    private static ScheduledExecutorService cleanEventsTaskExecutor;
+    public static List<Vehicle> vehiclesToIncreaseTrustLevel;
+    public static List<Vehicle> vehiclesToDecreaseTrustLevel;
 
-    public AntyBogus(){
-        eventsByVehicle = new HashMap<>();
-        confirmedEvents = new ArrayList<>();
+    static {
+        eventsByVehicle = new ConcurrentHashMap<>();
+        vehiclesToIncreaseTrustLevel = new ArrayList<>();
+        vehiclesToDecreaseTrustLevel = new ArrayList<>();
+
+        cleanEventsTaskExecutor = Executors.newScheduledThreadPool(1);
+        cleanEventsTaskExecutor.scheduleAtFixedRate(createCleaningEventsTask(),
+                5,
+                5,
+                    TimeUnit.MINUTES
+                );
     }
 
-    public void addEvent(String event, Vehicle vehicle){
-        if(!confirmedEvents.contains(event)){
-            if(!eventsByVehicle.containsKey(event)){
-                eventsByVehicle.put(event, createObservableList(vehicle, event));
-            } else {
-                eventsByVehicle.get(event).add(vehicle);
+    private static Runnable createCleaningEventsTask() {
+        return () -> {
+            Date currentDate = new Date(System.currentTimeMillis());
+            for (Event e : eventsByVehicle.keySet()) {
+                if (currentDate.getTime() >= (e.getEventDate().getTime() + TimeUnit.MINUTES.toMillis(5))) {
+                    addVehicleToDecrease(eventsByVehicle.get(e));
+                    eventsByVehicle.remove(e);
+                }
             }
-        } else {
-            updateTrustLevelOf(vehicle);
-        }
-
+        };
     }
 
-    private ObservableList<Vehicle> createObservableList(final Vehicle vehicle, final String event) {
+    public static void addEvent(Event event, Vehicle vehicle) {
+        if (!eventsByVehicle.containsKey(event)) {
+            eventsByVehicle.put(event, createObservableList(vehicle, event));
+        } else if (!eventsByVehicle.get(event).contains(vehicle)) {
+            eventsByVehicle.get(event).add(vehicle);
+        }
+    }
+
+    private static ObservableList<Vehicle> createObservableList(final Vehicle vehicle, final Event event) {
         ObservableList<Vehicle> vehicles = FXCollections.observableArrayList();
         vehicles.add(vehicle);
 
@@ -42,15 +61,15 @@ public class AntyBogus {
         return vehicles;
     }
 
-    private void checkIfEnoughConfirmations(ObservableList<? extends Vehicle> list, String event) {
-        if(list.size() == CONFIRMATION_LEVEL || checkIfEventConfirmedByTrustedVehicle(list)){
-            addEventToConfirm(event);
+    private static void checkIfEnoughConfirmations(ObservableList<? extends Vehicle> list, Event event) {
+        if (list.size() >= CONFIRMATION_LEVEL || checkIfEventConfirmedByTrustedVehicle(list)) {
+            addVehicleToIncrease(list);
         }
     }
 
-    private boolean checkIfEventConfirmedByTrustedVehicle(ObservableList<? extends Vehicle> list) {
-        for(Vehicle v : list){
-            if(Math.abs(v.getTrustLevel() - 100.0) < THRESH_HOLD){
+    private static boolean checkIfEventConfirmedByTrustedVehicle(ObservableList<? extends Vehicle> list) {
+        for (Vehicle v : list) {
+            if (Math.abs(v.getTrustLevel() - 100.0) < THRESH_HOLD) {
                 return true;
             }
         }
@@ -58,27 +77,20 @@ public class AntyBogus {
         return false;
     }
 
-    private void updateTrustLevelOf(List<Vehicle> vehicleList){
-        for(Vehicle vehicle : vehicleList){
-            updateTrustLevelOf(vehicle);
+
+    private synchronized static void addVehicleToIncrease(ObservableList<? extends Vehicle> vehicleList) {
+        for (Vehicle v : vehicleList) {
+            if (!vehiclesToIncreaseTrustLevel.contains(v)) {
+                vehiclesToIncreaseTrustLevel.add(v);
+            }
         }
     }
 
-    private void updateTrustLevelOf(Vehicle vehicle){
-        double currentTrustLevel = vehicle.getTrustLevel();
-
-        if(currentTrustLevel + TRUST_LEVEL_BONUS < 100.0){
-            vehicle.setTrustLevel(currentTrustLevel + TRUST_LEVEL_BONUS);
-        } else if( currentTrustLevel < 100.0){
-            vehicle.setTrustLevel(100.0);
+    private synchronized static void addVehicleToDecrease(ObservableList<? extends Vehicle> vehicleList) {
+        for (Vehicle v : vehicleList) {
+            if (!vehiclesToDecreaseTrustLevel.contains(v)) {
+                vehiclesToDecreaseTrustLevel.add(v);
+            }
         }
-    }
-
-    private void addEventToConfirm(String event){
-        updateTrustLevelOf(eventsByVehicle.get(event));
-
-        eventsByVehicle.remove(event);
-
-        confirmedEvents.add(event);
     }
 }

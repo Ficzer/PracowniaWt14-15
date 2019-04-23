@@ -80,7 +80,13 @@ public class Vehicle extends NetworkPoint{
 				}
 			}
 		}
-
+		if(!connectedPoints.isEmpty())
+		{
+			for(Event event : collectedEvents)
+			{
+				AntyBogus.addEvent(event ,this);
+			}
+		}
 
 	}
 

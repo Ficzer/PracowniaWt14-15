@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class AntyBogus {
-    private static final int CONFIRMATION_LEVEL = 15;
+    private static final int CONFIRMATION_LEVEL = 2;
     private static final double TRUST_LEVEL_BONUS = 1.0;
     private static final double THRESH_HOLD = 10E-15;
     private static ConcurrentMap<Event, ObservableList<Vehicle>> eventsByVehicle;
@@ -80,15 +80,17 @@ public class AntyBogus {
 
     private synchronized static void addVehicleToIncrease(ObservableList<? extends Vehicle> vehicleList) {
         for (Vehicle v : vehicleList) {
-            if (!vehiclesToIncreaseTrustLevel.contains(v)) {
+            if (!vehiclesToIncreaseTrustLevel.contains(v) && v.added==false) {
                 vehiclesToIncreaseTrustLevel.add(v);
+                v.added = true;
             }
         }
     }
 
     private synchronized static void addVehicleToDecrease(ObservableList<? extends Vehicle> vehicleList) {
         for (Vehicle v : vehicleList) {
-            if (!vehiclesToDecreaseTrustLevel.contains(v)) {
+            if (!vehiclesToDecreaseTrustLevel.contains(v) && v.added==false) {
+                v.added = true;
                 vehiclesToDecreaseTrustLevel.add(v);
             }
         }

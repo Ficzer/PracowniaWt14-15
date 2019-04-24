@@ -26,6 +26,7 @@ public class Vehicle extends NetworkPoint{
 	@Setter
 	public double trustLevel;
 	private double speed;
+	boolean added;
 	private boolean direction = true; // True if from starting point to end point
 	private List<StationaryNetworkPoint> connectedPoints = new ArrayList<>();
 
@@ -35,6 +36,7 @@ public class Vehicle extends NetworkPoint{
 		route = new Route();
 		trustLevel = 0.5;
 		currentLocation = new Point();
+		added = false;
 	}
 
 	public Vehicle(Route route, int id, double range, double speed){
@@ -44,6 +46,7 @@ public class Vehicle extends NetworkPoint{
 		this.range = range;
 		this.speed = speed + 0.001;
 		trustLevel = 0.5;
+		added = false;
 		this.currentLocation = new Point(route.getStartPoint().getX(), route.getStartPoint().getY());
 	}
 

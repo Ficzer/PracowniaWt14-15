@@ -40,5 +40,4 @@ public class StationaryNetworkPoint extends NetworkPoint
         vehicle.setTrustLevel(previousTrustLevel - TRUST_LEVEL_INCREASE);
     }
 
-
 }

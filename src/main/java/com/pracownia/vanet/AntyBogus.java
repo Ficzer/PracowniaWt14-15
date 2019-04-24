@@ -15,12 +15,14 @@ public class AntyBogus {
     private static final double TRUST_LEVEL_BONUS = 1.0;
     private static final double THRESH_HOLD = 10E-15;
     private static ConcurrentMap<Event, ObservableList<Vehicle>> eventsByVehicle;
+    public static ConcurrentMap<Event, List<Vehicle>> modifiedTrustLevelVehicles;
     private static ScheduledExecutorService cleanEventsTaskExecutor;
     public static List<Vehicle> vehiclesToIncreaseTrustLevel;
     public static List<Vehicle> vehiclesToDecreaseTrustLevel;
 
     static {
         eventsByVehicle = new ConcurrentHashMap<>();
+        modifiedTrustLevelVehicles = new ConcurrentHashMap<>();
         vehiclesToIncreaseTrustLevel = new ArrayList<>();
         vehiclesToDecreaseTrustLevel = new ArrayList<>();
 
@@ -37,7 +39,7 @@ public class AntyBogus {
             Date currentDate = new Date(System.currentTimeMillis());
             for (Event e : eventsByVehicle.keySet()) {
                 if (currentDate.getTime() >= (e.getEventDate().getTime() + TimeUnit.MINUTES.toMillis(5))) {
-                    addVehicleToDecrease(eventsByVehicle.get(e));
+                    addVehicleToDecrease(eventsByVehicle.get(e), e);
                     eventsByVehicle.remove(e);
                 }
             }
@@ -47,6 +49,7 @@ public class AntyBogus {
     public static void addEvent(Event event, Vehicle vehicle) {
         if (!eventsByVehicle.containsKey(event)) {
             eventsByVehicle.put(event, createObservableList(vehicle, event));
+            modifiedTrustLevelVehicles.put(event, new ArrayList<>());
         } else if (!eventsByVehicle.get(event).contains(vehicle)) {
             eventsByVehicle.get(event).add(vehicle);
         }
@@ -63,7 +66,7 @@ public class AntyBogus {
 
     private static void checkIfEnoughConfirmations(ObservableList<? extends Vehicle> list, Event event) {
         if (list.size() >= CONFIRMATION_LEVEL || checkIfEventConfirmedByTrustedVehicle(list)) {
-            addVehicleToIncrease(list);
+            addVehicleToIncrease(list, event);
         }
     }
 
@@ -78,20 +81,24 @@ public class AntyBogus {
     }
 
 
-    private synchronized static void addVehicleToIncrease(ObservableList<? extends Vehicle> vehicleList) {
+    private synchronized static void addVehicleToIncrease(ObservableList<? extends Vehicle> vehicleList, Event event) {
         for (Vehicle v : vehicleList) {
-            if (!vehiclesToIncreaseTrustLevel.contains(v) && v.added==false) {
-                vehiclesToIncreaseTrustLevel.add(v);
-                v.added = true;
+            if (!vehiclesToIncreaseTrustLevel.contains(v)) {
+                if(!modifiedTrustLevelVehicles.get(event).contains(v)) {
+                    vehiclesToIncreaseTrustLevel.add(v);
+                    modifiedTrustLevelVehicles.get(event).add(v);
+                }
             }
         }
     }
 
-    private synchronized static void addVehicleToDecrease(ObservableList<? extends Vehicle> vehicleList) {
+    private synchronized static void addVehicleToDecrease(ObservableList<? extends Vehicle> vehicleList, Event event) {
         for (Vehicle v : vehicleList) {
-            if (!vehiclesToDecreaseTrustLevel.contains(v) && v.added==false) {
-                v.added = true;
-                vehiclesToDecreaseTrustLevel.add(v);
+            if (!vehiclesToDecreaseTrustLevel.contains(v)) {
+                if(!modifiedTrustLevelVehicles.get(event).contains(v)) {
+                    vehiclesToDecreaseTrustLevel.add(v);
+                    modifiedTrustLevelVehicles.get(event).add(v);
+                }
             }
         }
     }

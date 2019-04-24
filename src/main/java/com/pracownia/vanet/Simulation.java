@@ -94,6 +94,11 @@ public class Simulation implements Runnable{
 
 	private void checkVehicleEventSource()
 	{
+		checkVehicleEventSourceEncountered();
+		checkVehicleEventSourceCollected();
+	}
+	private void checkVehicleEventSourceCollected()
+	{
 		for (Vehicle vehicle : map.getVehicles())
 		{
 			for (EventSource eventSource : map.getEventSources())
@@ -113,7 +118,28 @@ public class Simulation implements Runnable{
 			}
 		}
 	}
+	private void checkVehicleEventSourceEncountered()
+	{
+		for (Vehicle vehicle : map.getVehicles())
+		{
+			for (EventSource eventSource : map.getEventSources())
+			{
+				if(eventSource.isInRange(vehicle.getCurrentLocation()))
+				{
+					for (Event event : vehicle.getEncounteredEvents())
+					{
+						if(event.getId() == eventSource.getId())
+						{
+							return;
+						}
+					}
 
+					vehicle.getEncounteredEvents().add(eventSource.getEvent());
+					System.out.println("Event Encountered by Vehicle");
+				}
+			}
+		}
+	}
 	private void updateStationaryPoints()
 	{
 		int it = 0;

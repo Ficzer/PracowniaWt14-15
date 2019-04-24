@@ -84,7 +84,7 @@ public class Vehicle extends NetworkPoint{
 		}
 		if(!connectedPoints.isEmpty())
 		{
-			for(Event event : collectedEvents)
+			for(Event event : encounteredEvents)
 			{
 				AntyBogus.addEvent(event ,this);
 			}

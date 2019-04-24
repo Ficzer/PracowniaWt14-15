@@ -13,6 +13,7 @@ public abstract class NetworkPoint
     protected double range;
     protected List<Vehicle> connectedVehicles = new ArrayList<>();
     protected List<Event> collectedEvents = new ArrayList<>();
+    protected List<Event> encounteredEvents = new ArrayList<>();
 
     public NetworkPoint()
     {

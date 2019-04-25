@@ -13,6 +13,7 @@ public abstract class NetworkPoint
     protected double range;
     protected List<Vehicle> connectedVehicles = new ArrayList<>();
     protected List<Event> collectedEvents = new ArrayList<>();
+    protected List<Event> encounteredEvents = new ArrayList<>();
 
     public NetworkPoint()
     {
@@ -65,7 +66,7 @@ public abstract class NetworkPoint
                 if(!flag)
                 {
                     connectedVehicle.getCollectedEvents().add(event);
-                    System.out.println("Event shared");
+                    System.out.println("Event shared from Stationary to Vehicle");
                 }
             }
         }

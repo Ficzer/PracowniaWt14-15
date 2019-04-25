@@ -1,17 +1,30 @@
 package com.pracownia.vanet;
 
 import lombok.Data;
+import javafx.animation.TranslateTransition;
+import javafx.scene.shape.Circle;
+import javafx.util.Duration;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
+
 @Data
+@EqualsAndHashCode(callSuper=true)
 public class Vehicle extends NetworkPoint{
 
-	private int id;
-	private Route route;
-	private int iterator;
+	int id;
+	double currentX;
+	double currentY;
+	Route route;
+	int iterator;
+	@Getter
+	@Setter
+	public double trustLevel;
 	private double speed;
 	private boolean direction = true; // True if from starting point to end point
 	private List<StationaryNetworkPoint> connectedPoints = new ArrayList<>();
@@ -20,6 +33,7 @@ public class Vehicle extends NetworkPoint{
 	{
 		super();
 		route = new Route();
+		trustLevel = 0.5;
 		currentLocation = new Point();
 	}
 
@@ -29,6 +43,7 @@ public class Vehicle extends NetworkPoint{
 		this.id = id;
 		this.range = range;
 		this.speed = speed + 0.001;
+		trustLevel = 0.5;
 		this.currentLocation = new Point(route.getStartPoint().getX(), route.getStartPoint().getY());
 	}
 
@@ -67,7 +82,13 @@ public class Vehicle extends NetworkPoint{
 				}
 			}
 		}
-
+		if(!connectedPoints.isEmpty())
+		{
+			for(Event event : encounteredEvents)
+			{
+				AntyBogus.addEvent(event ,this);
+			}
+		}
 
 	}
 
@@ -88,10 +109,10 @@ public class Vehicle extends NetworkPoint{
 					}
 				}
 
-				if(!flag)
+				if(!flag && this.trustLevel >= 0.5)
 				{
 					connectedVehicle.getCollectedEvents().add(event);
-					System.out.println("Event shared");
+					System.out.println("Event shared from Vehicle to Vehicle");
 				}
 			}
 		}
@@ -109,10 +130,10 @@ public class Vehicle extends NetworkPoint{
 					}
 				}
 
-				if(!flag)
+				if(!flag && this.trustLevel >= 0.5)
 				{
 					connectedPoint.getCollectedEvents().add(event);
-					System.out.println("Event shared");
+					System.out.println("Event shared from Vehicle to Stationary");
 				}
 			}
 		}

@@ -1,6 +1,7 @@
 package com.pracownia.vanet;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 

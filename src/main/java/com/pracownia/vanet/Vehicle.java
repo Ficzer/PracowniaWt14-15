@@ -195,4 +195,10 @@ public class Vehicle extends NetworkPoint{
 			   "Current location: " + currentLocation + '\n' +
 			   "Neighbors:        " + connectedVehicles.size() + '\n';
 	}
+
+	public void addFakeEvent(EventSource eventSource)
+	{
+		AntyBogus.addEvent(eventSource.getEvent() ,this);
+		this.getCollectedEvents().add(eventSource.getEvent());
+	}
 }

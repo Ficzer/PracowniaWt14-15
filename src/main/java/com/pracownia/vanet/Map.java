@@ -64,7 +64,7 @@ public class Map {
 		stationaryNetworkPoints.add(new StationaryNetworkPoint(2, new Point(480.0, 610.0), 30.0));
 
 		eventSources.add(new EventSource(0, "Car Accident", "Serious Car Accident",
-				new Point(250.0, 210.0), new Date(), 20.0, EventType.CAR_ACCIDENT));
+				new Point(550.0, 210.0), new Date(), 20.0, EventType.CAR_ACCIDENT));
 	}
 
 	public void addVehicles(int amount)
@@ -73,9 +73,19 @@ public class Map {
 
 		for (int i=0; i<amount; i++)
 		{
-			vehicles.add(new Vehicle(routes.get(i%5), i, 40.0, random.nextDouble() / 2.0 + 0.5));
+			vehicles.add(new Vehicle(routes.get(i%5), i, 40.0, random.nextDouble() / 200000.0 + 0.5));
 		}
 	}
 
+	public void addFakeVehicle()
+	{
+		Random random = new Random();
+		Vehicle vehicle = new Vehicle(routes.get(99%5), 99, 40.0, random.nextDouble() / 200000.0 + 0.5);
+		EventSource eventSource = new EventSource(99, "Car Accident", "Fake Car Accident",
+				new Point(250.0, 210.0), new Date(), 20.0, EventType.CAR_ACCIDENT);
+		vehicle.addFakeEvent(eventSource);
+		//eventSources.add(eventSource);
+		vehicles.add(vehicle);
+	}
 
 }

@@ -53,9 +53,12 @@ public class WindowApp extends Application {
 	{
 		Button showRangeButton = new Button("Show Range");
 		Button spawnVehiclesButton = new Button("Spawn Vehicles");
+		Button spawnFakedVeehicle = new Button("Spawn fake vehicle");
 		TextField vehiclesAmountField = new TextField();
 		Label vehiclesAmountLabel = new Label("Vehicle Amount");
 
+		spawnFakedVeehicle.setLayoutX(950.0);
+		spawnFakedVeehicle.setLayoutY(70.0);
 		showRangeButton.setLayoutX(950.0);
 		showRangeButton.setLayoutY(100.0);
 		spawnVehiclesButton.setLayoutX(950.0);
@@ -77,6 +80,13 @@ public class WindowApp extends Application {
 			}
 		});
 
+		spawnFakedVeehicle.setOnAction(e -> {
+			simulation.getMap().addFakeVehicle();
+			shapesCreator.setVehicleCircles(simulation, 1);
+			shapesCreator.setLabels(simulation, 1);
+
+		});
+
 		spawnVehiclesButton.setOnAction(e -> {
 			simulation.getMap().addVehicles(Integer.parseInt(vehiclesAmountField.getText()));
 			shapesCreator.setVehicleCircles(simulation, Integer.parseInt(vehiclesAmountField.getText()));
@@ -84,7 +94,7 @@ public class WindowApp extends Application {
 
 		});
 
-		root.getChildren().addAll(showRangeButton, spawnVehiclesButton, vehiclesAmountField, vehiclesAmountLabel);
+		root.getChildren().addAll(spawnFakedVeehicle, showRangeButton, spawnVehiclesButton, vehiclesAmountField, vehiclesAmountLabel);
 	}
 
 

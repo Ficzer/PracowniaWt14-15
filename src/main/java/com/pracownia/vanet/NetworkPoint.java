@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public abstract class NetworkPoint
-{
+public abstract class NetworkPoint {
     protected int id;
     protected Point currentLocation = new Point();
     protected double range;
@@ -15,23 +14,19 @@ public abstract class NetworkPoint
     protected List<Event> collectedEvents = new ArrayList<>();
     protected List<Event> encounteredEvents = new ArrayList<>();
 
-    public NetworkPoint()
-    {
+    public NetworkPoint() {
 
     }
 
-    public NetworkPoint(int id, Point currentLocation, double range)
-    {
+    public NetworkPoint(int id, Point currentLocation, double range) {
         this.id = id;
         this.currentLocation = currentLocation;
         this.range = range;
     }
 
-    public void updateConnectedPoints(Map map)
-    {
+    public void updateConnectedPoints(Map map) {
         for (Vehicle v : map.getVehicles()) {
-            if (v == this)
-            {
+            if (v == this) {
                 continue;
             }
 
@@ -39,39 +34,30 @@ public abstract class NetworkPoint
                 if (!connectedVehicles.contains(v)) {
                     connectedVehicles.add(v);
                 }
-            }
-            else if (connectedVehicles.contains(v)) {
+            } else if (connectedVehicles.contains(v)) {
                 connectedVehicles.remove(v);
             }
         }
     }
 
-    public void sendEventsToConnectedPoints()
-    {
+    public void sendEventsToConnectedPoints() {
         boolean flag;
 
-        for (NetworkPoint connectedVehicle : connectedVehicles)
-        {
-            for (Event event : collectedEvents)
-            {
+        for (NetworkPoint connectedVehicle : connectedVehicles) {
+            for (Event event : collectedEvents) {
                 flag = false;
-                for (Event outEvent : connectedVehicle.getCollectedEvents())
-                {
-                    if(event.getId() == outEvent.getId())
-                    {
+                for (Event outEvent : connectedVehicle.getCollectedEvents()) {
+                    if (event.getId() == outEvent.getId()) {
                         flag = true;
                     }
                 }
 
-                if(!flag)
-                {
+                if (!flag) {
                     connectedVehicle.getCollectedEvents().add(event);
                     System.out.println("Event shared from Stationary to Vehicle");
                 }
             }
         }
-
-
     }
 
     public void update(Map map) {
@@ -83,5 +69,4 @@ public abstract class NetworkPoint
     protected double distance(Point a, Point b) {
         return Math.sqrt(Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getY() - b.getY(), 2));
     }
-
 }

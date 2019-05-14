@@ -1,9 +1,6 @@
 package com.pracownia.vanet;
 
 import lombok.Data;
-import javafx.animation.TranslateTransition;
-import javafx.scene.shape.Circle;
-import javafx.util.Duration;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,187 +9,156 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 @Data
-@EqualsAndHashCode(callSuper=true)
-public class Vehicle extends NetworkPoint{
+@EqualsAndHashCode(callSuper = true)
+public class Vehicle extends NetworkPoint {
 
-	int id;
-	double currentX;
-	double currentY;
-	Route route;
-	int iterator;
-	@Getter
-	@Setter
-	public double trustLevel;
-	private double speed;
-	private boolean direction = true; // True if from starting point to end point
-	private List<StationaryNetworkPoint> connectedPoints = new ArrayList<>();
+    @Getter
+    @Setter
+    public double trustLevel;
+    int id;
+    double currentX;
+    double currentY;
+    Route route;
+    int iterator;
+    public double speed;
+    private boolean direction = true; // True if from starting point to end point
+    public List<StationaryNetworkPoint> connectedPoints = new ArrayList<>();
 
-	public Vehicle()
-	{
-		super();
-		route = new Route();
-		trustLevel = 0.5;
-		currentLocation = new Point();
-	}
+    public Vehicle() {
+        super();
+        route = new Route();
+        trustLevel = 0.5;
+        currentLocation = new Point();
+    }
 
-	public Vehicle(Route route, int id, double range, double speed){
-		super();
-		this.route = route;
-		this.id = id;
-		this.range = range;
-		this.speed = speed + 0.001;
-		trustLevel = 0.5;
-		this.currentLocation = new Point(route.getStartPoint().getX(), route.getStartPoint().getY());
-	}
+    public Vehicle(Route route, int id, double range, double speed) {
+        super();
+        this.route = route;
+        this.id = id;
+        this.range = range;
+        this.speed = speed + 0.001;
+        trustLevel = 0.5;
+        this.currentLocation = new Point(route.getStartPoint().getX(), route.getStartPoint().getY());
+    }
 
-	@Override
-	public void updateConnectedPoints(Map map)
-	{
-		for (Vehicle v : map.getVehicles()) {
-			if (v == this)
-			{
-				continue;
-			}
+    @Override
+    public void updateConnectedPoints(Map map) {
+        for (Vehicle v : map.getVehicles()) {
+            if (v == this) {
+                continue;
+            }
 
-			if (distance(this.currentLocation, v.currentLocation) < range) {
-				if (!connectedVehicles.contains(v)) {
-					connectedVehicles.add(v);
-				}
-			}
-			else if (connectedVehicles.contains(v)) {
-				connectedVehicles.remove(v);
-			}
-		}
+            if (distance(this.currentLocation, v.currentLocation) < range) {
+                if (!connectedVehicles.contains(v)) {
+                    connectedVehicles.add(v);
+                }
+            } else if (connectedVehicles.contains(v)) {
+                connectedVehicles.remove(v);
+            }
+        }
 
-		for (StationaryNetworkPoint s : map.getStationaryNetworkPoints())
-		{
-			if (distance(this.currentLocation, s.getCurrentLocation()) < range)
-			{
-				if (!connectedPoints.contains(s)) {
-					connectedPoints.add(s);
-				}
-			}
-			else
-			{
-				if (isPointInList(s, connectedPoints))
-				{
-					connectedPoints.remove(s);
-				}
-			}
-		}
-		if(!connectedPoints.isEmpty())
-		{
-			for(Event event : encounteredEvents)
-			{
-				AntyBogus.addEvent(event ,this);
-			}
-		}
+        for (StationaryNetworkPoint s : map.getStationaryNetworkPoints()) {
+            if (distance(this.currentLocation, s.getCurrentLocation()) < range) {
+                if (!connectedPoints.contains(s)) {
+                    connectedPoints.add(s);
+                }
+            } else {
+                if (isPointInList(s, connectedPoints)) {
+                    connectedPoints.remove(s);
+                }
+            }
+        }
+        if (!connectedPoints.isEmpty()) {
+            for (Event event : encounteredEvents) {
+                AntyBogus.addEvent(event, this);
+            }
+        }
+    }
 
-	}
+    public void sendEventsToConnectedPoints() {
+        boolean flag;
 
-	public void sendEventsToConnectedPoints()
-	{
-		boolean flag;
+        for (NetworkPoint connectedVehicle : connectedVehicles) {
+            for (Event event : collectedEvents) {
+                flag = false;
+                for (Event outEvent : connectedVehicle.getCollectedEvents()) {
+                    if (event.getId() == outEvent.getId()) {
+                        flag = true;
+                    }
+                }
 
-		for (NetworkPoint connectedVehicle : connectedVehicles)
-		{
-			for (Event event : collectedEvents)
-			{
-				flag = false;
-				for (Event outEvent : connectedVehicle.getCollectedEvents())
-				{
-					if(event.getId() == outEvent.getId())
-					{
-						flag = true;
-					}
-				}
+                if (!flag && this.trustLevel >= 0.5) {
+                    connectedVehicle.getCollectedEvents().add(event);
+                    System.out.println("Event shared from Vehicle to Vehicle");
+                }
+            }
+        }
 
-				if(!flag && this.trustLevel >= 0.5)
-				{
-					connectedVehicle.getCollectedEvents().add(event);
-					System.out.println("Event shared from Vehicle to Vehicle");
-				}
-			}
-		}
+        for (NetworkPoint connectedPoint : connectedPoints) {
+            for (Event event : collectedEvents) {
+                flag = false;
+                for (Event outEvent : connectedPoint.getCollectedEvents()) {
+                    if (event.getId() == outEvent.getId()) {
+                        flag = true;
+                    }
+                }
 
-		for (NetworkPoint connectedPoint : connectedPoints)
-		{
-			for (Event event : collectedEvents)
-			{
-				flag = false;
-				for (Event outEvent : connectedPoint.getCollectedEvents())
-				{
-					if(event.getId() == outEvent.getId())
-					{
-						flag = true;
-					}
-				}
+                if (!flag && this.trustLevel >= 0.5) {
+                    connectedPoint.getCollectedEvents().add(event);
+                    System.out.println("Event shared from Vehicle to Stationary");
+                }
+            }
+        }
+    }
 
-				if(!flag && this.trustLevel >= 0.5)
-				{
-					connectedPoint.getCollectedEvents().add(event);
-					System.out.println("Event shared from Vehicle to Stationary");
-				}
-			}
-		}
-	}
+    @Override
+    public void update(Map map) {
+        updateConnectedPoints(map);
+        sendEventsToConnectedPoints();
 
-	@Override
-	public void update(Map map){
-		updateConnectedPoints(map);
-		sendEventsToConnectedPoints();
+        double distanceToEndPoint = Math.sqrt(Math.pow(route.getEndPoint().getX() - currentLocation.getX(), 2) +
+                Math.pow(route.getEndPoint().getY() - currentLocation.getY(), 2));
 
-		double distanceToEndPoint = Math.sqrt(Math.pow(route.getEndPoint().getX() - currentLocation.getX(), 2) +
-				Math.pow(route.getEndPoint().getY() - currentLocation.getY(), 2));
+        double cos = (route.getEndPoint().getX() - currentLocation.getX()) / distanceToEndPoint;
+        double sin = (route.getEndPoint().getY() - currentLocation.getY()) / distanceToEndPoint;
 
-		double cos = (route.getEndPoint().getX() - currentLocation.getX()) / distanceToEndPoint;
-		double sin = (route.getEndPoint().getY() - currentLocation.getY()) / distanceToEndPoint;
+        double distanceToStart;
 
-		double distanceToStart;
+        if (direction) {
+            distanceToStart = Math.sqrt(Math.pow(currentLocation.getX() - route.getStartPoint().getX(), 2) +
+                    Math.pow(currentLocation.getY() - route.getStartPoint().getY(), 2));
+            currentLocation.setX(currentLocation.getX() + cos * speed);
+            currentLocation.setY(currentLocation.getY() + sin * speed);
+        } else {
+            distanceToStart = Math.sqrt(Math.pow(currentLocation.getX() - route.getEndPoint().getX(), 2) +
+                    Math.pow(currentLocation.getY() - route.getEndPoint().getY(), 2));
 
-		if(direction)
-		{
-			distanceToStart = Math.sqrt(Math.pow(currentLocation.getX()-route.getStartPoint().getX(), 2) +
-					Math.pow(currentLocation.getY()-route.getStartPoint().getY(), 2));
-			currentLocation.setX(currentLocation.getX() + cos * speed);
-			currentLocation.setY(currentLocation.getY() + sin * speed);
-		}
-		else
-		{
-			distanceToStart = Math.sqrt(Math.pow(currentLocation.getX()-route.getEndPoint().getX(), 2) +
-					Math.pow(currentLocation.getY()-route.getEndPoint().getY(), 2));
+            currentLocation.setX(currentLocation.getX() - cos * speed);
+            currentLocation.setY(currentLocation.getY() - sin * speed);
+        }
 
-			currentLocation.setX(currentLocation.getX() - cos * speed);
-			currentLocation.setY(currentLocation.getY() - sin * speed);
+        if (distanceToStart >= route.getDistance()) {
+            direction = !direction;
+        }
 
-		}
+        System.out.println(this.toString());
+    }
 
-		if(distanceToStart >= route.getDistance())
-		{
-			direction = !direction;
-		}
-	}
+    public boolean isPointInList(StationaryNetworkPoint point, List<StationaryNetworkPoint> list) {
+        boolean result = false;
+        for (StationaryNetworkPoint s : list) {
+            if (s.getId() == point.getId()) {
+                result = true;
+            }
+        }
+        return result;
+    }
 
-	public boolean isPointInList(StationaryNetworkPoint point, List<StationaryNetworkPoint> list)
-	{
-		boolean result = false;
-		for (StationaryNetworkPoint s : list)
-		{
-			if(s.getId() == point.getId())
-			{
-				result = true;
-			}
-
-		}
-		return result;
-	}
-
-	@Override
-	public String toString() {
-		return "ID:               " + id + '\n' +
-			   "Current location: " + currentLocation + '\n' +
-			   "Neighbors:        " + connectedVehicles.size() + '\n';
-	}
+    @Override
+    public String toString() {
+        return "ID:\t" + id + '\t' +
+                "Neighbours:\t" + connectedVehicles.size() + '\t' +
+                "Current location:\t" + currentLocation;
+    }
 }

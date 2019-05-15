@@ -16,6 +16,8 @@ public class WindowApp extends Application {
     public TextField trustLevelField;
     public TextField speedField;
     public TextField vehIdField;
+    public TextField connEventsField;
+    public TextField connVehField;
     public TextField connPointsField;
     private Group root = new Group();
     private ShapesCreator shapesCreator;
@@ -65,16 +67,25 @@ public class WindowApp extends Application {
         // Start stop simulation.
         Button startSimulation = new Button("Start simulation");
         startSimulation.setLayoutX(950.0);
-        startSimulation.setLayoutY(280.);
+        startSimulation.setLayoutY(310.);
         startSimulation.setOnAction(e -> {
             simulation.setSimulationRunning(true);
         });
 
         Button stopSimulation = new Button("Stop simulation");
         stopSimulation.setLayoutX(950.0);
-        stopSimulation.setLayoutY(310.);
+        stopSimulation.setLayoutY(340.);
         stopSimulation.setOnAction(e -> {
             simulation.setSimulationRunning(false);
+        });
+
+        Button saveVehicleButton = new Button("Save vehicle");
+        saveVehicleButton.setLayoutX(950.0);
+        saveVehicleButton.setLayoutY(280.);
+        saveVehicleButton.setOnAction(e -> {
+            Vehicle v = simulation.getMap().getVehicles().get(Integer.parseInt(this.vehIdField.getText()));
+            v.setSpeed(Double.parseDouble(this.speedField.getText()));
+            v.setTrustLevel(Double.parseDouble(this.trustLevelField.getText()));
         });
 
 
@@ -111,6 +122,22 @@ public class WindowApp extends Application {
         Label connPointsLabel = new Label("Conn points");
         connPointsLabel.setLayoutX(950.0);
         connPointsLabel.setLayoutY(610.0);
+
+        this.connEventsField = new TextField();
+        connEventsField.setLayoutX(950.0);
+        connEventsField.setLayoutY(640.0);
+
+        Label connEventsLabel = new Label("collectedEvents");
+        connEventsLabel.setLayoutX(950.0);
+        connEventsLabel.setLayoutY(670.0);
+
+        this.connVehField = new TextField();
+        connVehField.setLayoutX(950.0);
+        connVehField.setLayoutY(700.0);
+
+        Label connVehLabel = new Label("connectedVehicles");
+        connVehLabel.setLayoutX(950.0);
+        connVehLabel.setLayoutY(730.0);
 
         // Other stuff.
 
@@ -156,6 +183,7 @@ public class WindowApp extends Application {
                         spawnVehiclesButton,
                         vehiclesAmountField,
                         stopSimulation,
+                        saveVehicleButton,
                         trustLevelField,
                         trustLevelLabel,
                         speedField,
@@ -164,6 +192,10 @@ public class WindowApp extends Application {
                         vehIdLabel,
                         connPointsField,
                         connPointsLabel,
+                        connEventsField,
+                        connEventsLabel,
+                        connVehField,
+                        connVehLabel,
                         startSimulation,
                         vehiclesAmountLabel,
                         rangeAmountLabel,

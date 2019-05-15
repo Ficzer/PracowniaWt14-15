@@ -29,6 +29,8 @@ public class ShapesCreator {
             windowApp.trustLevelField.setText(String.valueOf(vehicle.getTrustLevel()));
             windowApp.vehIdField.setText(String.valueOf(vehicle.getId()));
             windowApp.connPointsField.setText(String.valueOf(vehicle.getConnectedPoints().size()));
+            windowApp.connVehField.setText(String.valueOf(vehicle.getConnectedVehicles().size()));
+            windowApp.connEventsField.setText(String.valueOf(vehicle.getCollectedEvents().size()));
         });
         return circle;
     }

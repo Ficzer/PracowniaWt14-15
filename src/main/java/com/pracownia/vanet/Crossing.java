@@ -2,6 +2,7 @@ package com.pracownia.vanet;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.Random;
 
 @Data
@@ -52,6 +53,29 @@ public class Crossing {
             }
 
         }
+
+        if (vehicle.getPreviousCrossing() != null && vehicle.getPreviousCrossing() != this.location) {
+            double s = Math.sqrt(Math.pow((location.getX() - vehicle.getPreviousCrossing().getX()), 2) + Math.pow(location.getY() - vehicle.getPreviousCrossing().getY(), 2));
+            double t = Math.abs(new Date().getTime() - vehicle.getDate().getTime());
+
+            double v = s / (t / 50);
+//            System.out.println("Szybkosc auta: " + vehicle.getSpeed());
+//            System.out.println("Wyliczona: " + v);
+//            System.out.println("Czas: " + t);
+//            System.out.println("droga: " + s);
+
+//            System.out.println("pozycja auta: " + vehicle.getPreviousCrossing().getX() + " --- " +vehicle.getPreviousCrossing().getY() );
+//            System.out.println("pozycja skrzyzowania: " + location.getX() + " --- " + location.getY());
+
+            if (Math.abs(v - vehicle.getSpeed()) > 0.5) {
+                System.out.println("Atak hakierów!!!");
+                vehicle.setNotSafe("PIRAT");
+            } else {
+                System.out.println("Bezpiecznie.");
+            }
+        }
+
+        vehicle.setPreviousCrossing(location);
     }
 
     public double getDistanceToCrossing(Vehicle vehicle)

@@ -79,6 +79,20 @@ public class WindowApp extends Application {
             simulation.setSimulationRunning(false);
         });
 
+        Button addHackerVehicle  = new Button("Add hacker vehicle");
+        addHackerVehicle.setLayoutX(1050.0);
+        addHackerVehicle.setLayoutY(310.);
+        addHackerVehicle.setOnAction(e -> {
+            shapesCreator.setCopyCircle(simulation.getMap().addCopy());
+        });
+
+        Button teleportVehicle = new Button("Teleport a vehicle");
+        teleportVehicle.setLayoutX(1050.0);
+        teleportVehicle.setLayoutY(340.);
+        teleportVehicle.setOnAction(e -> {
+            simulation.teleportVehicle();
+        });
+
         Button saveVehicleButton = new Button("Save vehicle");
         saveVehicleButton.setLayoutX(950.0);
         saveVehicleButton.setLayoutY(280.);
@@ -86,6 +100,13 @@ public class WindowApp extends Application {
             Vehicle v = simulation.getMap().getVehicles().get(Integer.parseInt(this.vehIdField.getText()));
             v.setSpeed(Double.parseDouble(this.speedField.getText()));
             v.setTrustLevel(Double.parseDouble(this.trustLevelField.getText()));
+        });
+
+        Button clearNotSafe = new Button("Clear hackers");
+        clearNotSafe.setLayoutX(1050.0);
+        clearNotSafe.setLayoutY(280.);
+        clearNotSafe.setOnAction(e -> {
+            simulation.deleteUnsafeCircles();
         });
 
 
@@ -200,6 +221,9 @@ public class WindowApp extends Application {
                         vehiclesAmountLabel,
                         rangeAmountLabel,
                         rangeAmountField,
-                        changeRangeButton);
+                        changeRangeButton,
+                        teleportVehicle,
+                        addHackerVehicle,
+                        clearNotSafe);
     }
 }

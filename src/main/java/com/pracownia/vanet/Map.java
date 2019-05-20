@@ -37,6 +37,20 @@ public class Map {
 
 	}
 
+	public List<Integer> deleteUnsafeVehicles() {
+
+		List<Integer> result = new ArrayList<>();
+		for(int i = 0; i < vehicles.size(); i++) {
+			if(vehicles.get(i).safe == false) {
+				result.add(i);
+				vehicles.remove(i);
+				i--;
+			}
+		}
+
+		return result;
+	}
+
 	private void initMap()
 	{
 		routes.add(new Route(200.0, 100.0, 200.0, 700.0));
@@ -75,6 +89,14 @@ public class Map {
 		{
 			vehicles.add(new Vehicle(routes.get(i%5), i, 40.0, random.nextDouble() / 2.0 + 2));
 		}
+	}
+
+	public Vehicle addCopy() {
+		int r = new Random().nextInt(vehicles.size());
+		Vehicle me = new Vehicle(vehicles.get(r).getRoute(), vehicles.get(r).getId(), vehicles.get(r).getRange(), vehicles.get(r).getSpeed());
+		vehicles.add(me);
+
+		return me;
 	}
 
 

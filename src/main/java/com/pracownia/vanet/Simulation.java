@@ -63,7 +63,11 @@ public class Simulation implements Runnable {
                 rangeList.get(it).setCenterY(vehicleY);
 
                 //labelList.get(it).setText(String.valueOf(vehicle.getCollectedEvents().size()));
-                if (vehicle.getCollectedEvents().size() > 0) {
+
+                if (vehicle.trustLevel < 0.3){
+                    circleList.get(it).setFill(Color.RED);
+                }
+                else if (vehicle.getCollectedEvents().size() > 0) {
                     circleList.get(it).setFill(Color.BROWN);
                 }
                 labelList.get(it).setLayoutX(vehicleX + 7.0);

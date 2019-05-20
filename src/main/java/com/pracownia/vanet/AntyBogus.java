@@ -38,7 +38,7 @@ public class AntyBogus {
         return () -> {
             Date currentDate = new Date(System.currentTimeMillis());
             for (Event e : eventsByVehicle.keySet()) {
-                if (currentDate.getTime() >= (e.getEventDate().getTime() + TimeUnit.MINUTES.toMillis(5))) {
+                if (currentDate.getTime() >= (e.getEventDate().getTime() + TimeUnit.MINUTES.toMillis(1))) {
                     addVehicleToDecrease(eventsByVehicle.get(e), e);
                     eventsByVehicle.remove(e);
                 }

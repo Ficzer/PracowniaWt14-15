@@ -65,11 +65,11 @@ public class Simulation implements Runnable {
 
     public void deleteUnsafeCircles() {
         List which = map.deleteUnsafeVehicles();
-        for(int i = 0; i < which.size(); i++) {
-            circleList.remove(which.get(i));
-            rangeList.remove(which.get(i));
-            i--;
-        }
+//        for(int i = 0; i < which.size(); i++) {
+//            circleList.remove(which.get(i));
+//            rangeList.remove(which.get(i));
+//            i--;
+//        }
     }
 
     private void updateVehiclesPosition() {

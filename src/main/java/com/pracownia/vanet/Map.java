@@ -77,16 +77,21 @@ public class Map {
 		}
 	}
 
+	private static int fakeCarId = -666;
+	private static int fakeEventId = -1;
+
 	public void addFakeVehicle(String nameEvent)
 	{
 		Random random = new Random();
 		int x = (int)(random.nextDouble() * 1000);
 		int y = (int)(random.nextDouble() * 1000);
-		Vehicle vehicle = new Vehicle(routes.get(99%5), 99, 40.0, random.nextDouble() / 2.0 + 2);
-		EventSource eventSource = new EventSource(99, nameEvent, "Fake Car Accident",
+		Vehicle vehicle = new Vehicle(routes.get(99%5), fakeCarId, 40.0, random.nextDouble() / 2.0 + 2);
+		EventSource eventSource = new EventSource(fakeEventId, nameEvent, "Fake Car Accident",
 				new Point(x, y), new Date(), 20.0, EventType.CAR_ACCIDENT);
 		vehicle.addFakeEvent(eventSource);
 		vehicles.add(vehicle);
+		fakeCarId--;
+		fakeEventId--;
 	}
 
 }

@@ -142,7 +142,7 @@ public class Vehicle extends NetworkPoint {
             direction = !direction;
         }
 
-        System.out.println(this.toString());
+        //System.out.println(this.toString());
     }
 
     public boolean isPointInList(StationaryNetworkPoint point, List<StationaryNetworkPoint> list) {
@@ -165,6 +165,6 @@ public class Vehicle extends NetworkPoint {
     public void addFakeEvent(EventSource eventSource)
     {
         AntyBogus.addEvent(eventSource.getEvent() ,this);
-        this.getCollectedEvents().add(eventSource.getEvent());
+        this.getEncounteredEvents().add(eventSource.getEvent());
     }
 }

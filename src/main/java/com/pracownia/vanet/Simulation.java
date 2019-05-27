@@ -109,6 +109,7 @@ public class Simulation implements Runnable {
 
                 if (crossing.getDistanceToCrossing(vehicle) < Crossing.DETECTION_RANGE) {
                     crossing.transportVehicle(vehicle);
+
                 }
             }
         }

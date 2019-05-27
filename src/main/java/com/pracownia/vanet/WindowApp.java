@@ -2,14 +2,19 @@ package com.pracownia.vanet;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.util.stream.Collectors;
 
 public class WindowApp extends Application {
 
@@ -47,7 +52,7 @@ public class WindowApp extends Application {
 
         setInterface(simulation);
 
-        Scene scene = new Scene(root, 1100, 800);
+        Scene scene = new Scene(root, 1200, 800);
         primaryStage.setTitle("Vanet");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -79,7 +84,7 @@ public class WindowApp extends Application {
             simulation.setSimulationRunning(false);
         });
 
-        Button addHackerVehicle  = new Button("Add hacker vehicle");
+        Button addHackerVehicle = new Button("Add hacker vehicle");
         addHackerVehicle.setLayoutX(1050.0);
         addHackerVehicle.setLayoutY(310.);
         addHackerVehicle.setOnAction(e -> {
@@ -160,6 +165,13 @@ public class WindowApp extends Application {
         connVehLabel.setLayoutX(950.0);
         connVehLabel.setLayoutY(730.0);
 
+        ListView<Vehicle> hackerVehiclesList = new ListView<>();
+        hackerVehiclesList.setLayoutX(1100.0);
+        hackerVehiclesList.setLayoutY(730.0);
+        hackerVehiclesList.setMaxHeight(100);
+        hackerVehiclesList.setItems(simulation.getMap().getVehicles());
+//.filtered(x->!x.safe)
+
         // Other stuff.
 
         showRangeButton.setLayoutX(950.0);
@@ -224,6 +236,9 @@ public class WindowApp extends Application {
                         changeRangeButton,
                         teleportVehicle,
                         addHackerVehicle,
-                        clearNotSafe);
+                        clearNotSafe,
+                        hackerVehiclesList);
     }
+
+
 }

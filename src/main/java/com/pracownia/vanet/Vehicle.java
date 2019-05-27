@@ -194,7 +194,8 @@ public class Vehicle extends NetworkPoint {
     @Override
     public String toString() {
         return "ID:\t" + id + '\t' +
-                "Neighbours:\t" + connectedVehicles.size() + '\t' +
-                "Current location:\t" + currentLocation;
+                "safe: " + safe;
+//                "Neighbours:\t" + connectedVehicles.size() + '\t' +
+//                "Current location:\t" + currentLocation;
     }
 }

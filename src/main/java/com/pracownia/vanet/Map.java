@@ -1,5 +1,9 @@
 package com.pracownia.vanet;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import lombok.Data;
 
 import java.awt.*;
@@ -7,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Przechoowuje samochody i ich powiązania z trasami.
@@ -19,17 +24,34 @@ public class Map {
 	private double height = 900.0;
 
 	private List<Route> routes;
-	private List<Vehicle> vehicles;
+	private ObservableList<Vehicle> vehicles;
 	private List<Crossing> crossings;
 	private List<EventSource> eventSources;
 	private List<StationaryNetworkPoint> stationaryNetworkPoints;
-
+	private ObservableList<Vehicle> hackers;
 
 
 	public Map(){
 
 		routes = new ArrayList<>();
-		vehicles = new ArrayList<>();
+		vehicles = FXCollections.observableArrayList();
+
+//		vehicles.addListener((ListChangeListener.Change<? extends Vehicle> change) -> {
+//			while (change.next()) {
+//				for (Vehicle vehicle : vehicles) {
+//					if(!vehicle.safe){
+//						if(!hackers.contains(vehicle))
+//							hackers.add(vehicle);
+//					}else{
+//						if(hackers.contains(vehicle))
+//							hackers.remove(vehicle);
+//					}
+//				}
+////				hackersvehicles.stream().filter(x->!x.safe).collect(Collectors.toList()));
+//			}
+//		});
+		
+		hackers = FXCollections.observableArrayList();
 		crossings = new ArrayList<>();
 		eventSources = new ArrayList<>();
 		stationaryNetworkPoints = new ArrayList<>();

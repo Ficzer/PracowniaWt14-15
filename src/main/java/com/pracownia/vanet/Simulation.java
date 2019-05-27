@@ -86,17 +86,19 @@ public class Simulation implements Runnable {
                 rangeList.get(it).setCenterX(vehicleX);
                 rangeList.get(it).setCenterY(vehicleY);
 
-//                labelList.get(it).setText(String.valueOf(vehicle.getCollectedEvents().size()));
-//                if (vehicle.getCollectedEvents().size() > 0) {
-//                    circleList.get(it).setFill(Color.BROWN);
-//                }
-
                 if (vehicle.safe != true) {
                     circleList.get(it).setFill(Color.RED);
-                }
+                    //labelList.get(it).setText(String.valueOf(vehicle.getCollectedEvents().size()));
 
-                labelList.get(it).setLayoutX(vehicleX + 7.0);
-                labelList.get(it).setLayoutY(vehicleY);
+                    if (vehicle.trustLevel < 0.3) {
+                        circleList.get(it).setFill(Color.RED);
+                    } else if (vehicle.getCollectedEvents().size() > 0) {
+                        circleList.get(it).setFill(Color.BROWN);
+                    }
+
+                    labelList.get(it).setLayoutX(vehicleX + 7.0);
+                    labelList.get(it).setLayoutY(vehicleY);
+                }
             } catch (IndexOutOfBoundsException e) {
             }
             it++;

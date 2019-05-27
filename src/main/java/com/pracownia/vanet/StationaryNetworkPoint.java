@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class StationaryNetworkPoint extends NetworkPoint
 {
-    private final static double TRUST_LEVEL_INCREASE = 0.5;
-    private final static double TRUST_LEVEL_DECREASE = 1.0;
+    private final static double TRUST_LEVEL_INCREASE = 0.1;
+    private final static double TRUST_LEVEL_DECREASE = 0.4;
 
     public StationaryNetworkPoint(int id, Point currentLocation, double range)
     {
@@ -37,7 +37,7 @@ public class StationaryNetworkPoint extends NetworkPoint
     private void decreaseVehicleTrustLevel(Vehicle vehicle) {
         double previousTrustLevel = vehicle.getTrustLevel();
 
-        vehicle.setTrustLevel(previousTrustLevel - TRUST_LEVEL_INCREASE);
+        vehicle.setTrustLevel(previousTrustLevel - TRUST_LEVEL_DECREASE);
     }
 
 }

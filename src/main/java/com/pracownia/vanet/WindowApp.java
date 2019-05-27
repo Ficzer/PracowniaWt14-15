@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -52,7 +53,9 @@ public class WindowApp extends Application {
 
         setInterface(simulation);
 
-        Scene scene = new Scene(root, 1200, 800);
+
+        Scene scene = new Scene(root, 1300, 800);
+
         primaryStage.setTitle("Vanet");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -64,10 +67,13 @@ public class WindowApp extends Application {
         Button showRangeButton = new Button("Show Range");
         Button changeRangeButton = new Button("ChangeRange");
         Button spawnVehiclesButton = new Button("Spawn Vehicles");
+        Button spawnFakedVeehicle = new Button("Spawn fake vehicle");
         TextField vehiclesAmountField = new TextField();
         TextField rangeAmountField = new TextField();
         Label rangeAmountLabel = new Label("Range");
         Label vehiclesAmountLabel = new Label("Vehicle Amount");
+        ChoiceBox chooseFakeEvent = new ChoiceBox(FXCollections.observableArrayList(
+                "Car accident", "Speed camera", "Police control"));
 
         // Start stop simulation.
         Button startSimulation = new Button("Start simulation");
@@ -173,6 +179,12 @@ public class WindowApp extends Application {
 //.filtered(x->!x.safe)
 
         // Other stuff.
+        chooseFakeEvent.setLayoutX(1130.0);
+        chooseFakeEvent.setLayoutY(80.0);
+        chooseFakeEvent.setValue("Car accident");
+
+        spawnFakedVeehicle.setLayoutX(1130.0);
+        spawnFakedVeehicle.setLayoutY(110.0);
 
         showRangeButton.setLayoutX(950.0);
         showRangeButton.setLayoutY(80.0);
@@ -205,6 +217,13 @@ public class WindowApp extends Application {
             }
         });
 
+        spawnFakedVeehicle.setOnAction(e -> {
+            simulation.getMap().addFakeVehicle(chooseFakeEvent.getValue().toString());
+            shapesCreator.setVehicleCircles(simulation, 1);
+            shapesCreator.setLabels(simulation, 1);
+
+        });
+
         spawnVehiclesButton.setOnAction(e -> {
             simulation.getMap().addVehicles(Integer.parseInt(vehiclesAmountField.getText()));
             shapesCreator.setVehicleCircles(simulation, Integer.parseInt(vehiclesAmountField.getText()));
@@ -212,7 +231,9 @@ public class WindowApp extends Application {
         });
 
         root.getChildren()
-                .addAll(showRangeButton,
+                .addAll(chooseFakeEvent,
+                        spawnFakedVeehicle,
+                        showRangeButton,
                         spawnVehiclesButton,
                         vehiclesAmountField,
                         stopSimulation,

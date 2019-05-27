@@ -12,6 +12,7 @@ import java.util.Random;
 @Data
 public class Simulation implements Runnable {
 
+    public Color here = Color.RED;
     public Boolean simulationRunning;
     Thread tr;
     private Map map;
@@ -87,18 +88,18 @@ public class Simulation implements Runnable {
                 rangeList.get(it).setCenterY(vehicleY);
 
                 if (vehicle.safe != true) {
-                    circleList.get(it).setFill(Color.RED);
+                    circleList.get(it).setFill(here);
                     //labelList.get(it).setText(String.valueOf(vehicle.getCollectedEvents().size()));
 
                     if (vehicle.trustLevel < 0.3) {
-                        circleList.get(it).setFill(Color.RED);
-                    } else if (vehicle.getCollectedEvents().size() > 0) {
-                        circleList.get(it).setFill(Color.BROWN);
-                    }
+                        circleList.get(it).setFill(here);
+//                    } else if (vehicle.getCollectedEvents().size() > 0) {
+//                        circleList.get(it).setFill(Color.BROWN);
+//                    }
 
                     labelList.get(it).setLayoutX(vehicleX + 7.0);
                     labelList.get(it).setLayoutY(vehicleY);
-                }
+                } }
             } catch (IndexOutOfBoundsException e) {
             }
             it++;

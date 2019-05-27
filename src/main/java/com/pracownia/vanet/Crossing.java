@@ -70,6 +70,8 @@ public class Crossing {
             if (Math.abs(v - vehicle.getSpeed()) > 0.5) {
                 System.out.println("Atak hakierów!!!");
                 vehicle.setNotSafe("PIRAT");
+            } else if(vehicle.trustLevel < 0.3) {
+                vehicle.setNotSafe("PIRAT");
             } else {
                 System.out.println("Bezpiecznie.");
             }

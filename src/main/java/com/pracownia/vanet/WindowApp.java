@@ -1,17 +1,17 @@
 package com.pracownia.vanet;
 
+
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 public class WindowApp extends Application {
 
+    public CheckBox seeThrough;
     public TextField trustLevelField;
     public TextField speedField;
     public TextField vehIdField;
@@ -54,7 +55,7 @@ public class WindowApp extends Application {
         setInterface(simulation);
 
 
-        Scene scene = new Scene(root, 1300, 800);
+        Scene scene = new Scene(root, 1400, 850);
 
         primaryStage.setTitle("Vanet");
         primaryStage.setScene(scene);
@@ -178,6 +179,22 @@ public class WindowApp extends Application {
         hackerVehiclesList.setItems(simulation.getMap().getVehicles());
 //.filtered(x->!x.safe)
 
+
+        seeThrough = new CheckBox("Widac?");
+        seeThrough.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if(t1) {
+                    simulation.here = Color.TRANSPARENT;
+                }
+                else {
+                    simulation.here = Color.RED;
+                }
+            }
+        });
+        seeThrough.setLayoutX(1050);
+        seeThrough.setLayoutY(80.0);
+
         // Other stuff.
         chooseFakeEvent.setLayoutX(1130.0);
         chooseFakeEvent.setLayoutY(80.0);
@@ -258,7 +275,8 @@ public class WindowApp extends Application {
                         teleportVehicle,
                         addHackerVehicle,
                         clearNotSafe,
-                        hackerVehiclesList);
+                        hackerVehiclesList,
+                        seeThrough);
     }
 
 

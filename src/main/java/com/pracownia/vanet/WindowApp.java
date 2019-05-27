@@ -92,15 +92,15 @@ public class WindowApp extends Application {
         });
 
         Button addHackerVehicle = new Button("Add hacker vehicle");
-        addHackerVehicle.setLayoutX(1050.0);
-        addHackerVehicle.setLayoutY(310.);
+        addHackerVehicle.setLayoutX(1130.0);
+        addHackerVehicle.setLayoutY(200.00);
         addHackerVehicle.setOnAction(e -> {
             shapesCreator.setCopyCircle(simulation.getMap().addCopy());
         });
 
         Button teleportVehicle = new Button("Teleport a vehicle");
-        teleportVehicle.setLayoutX(1050.0);
-        teleportVehicle.setLayoutY(340.);
+        teleportVehicle.setLayoutX(1130.0);
+        teleportVehicle.setLayoutY(230.0);
         teleportVehicle.setOnAction(e -> {
             simulation.teleportVehicle();
         });
@@ -115,8 +115,8 @@ public class WindowApp extends Application {
         });
 
         Button clearNotSafe = new Button("Clear hackers");
-        clearNotSafe.setLayoutX(1050.0);
-        clearNotSafe.setLayoutY(280.);
+        clearNotSafe.setLayoutX(1130.0);
+        clearNotSafe.setLayoutY(265.0);
         clearNotSafe.setOnAction(e -> {
             simulation.deleteUnsafeCircles();
         });
@@ -173,9 +173,10 @@ public class WindowApp extends Application {
         connVehLabel.setLayoutY(730.0);
 
         ListView<Vehicle> hackerVehiclesList = new ListView<>();
-        hackerVehiclesList.setLayoutX(1100.0);
-        hackerVehiclesList.setLayoutY(730.0);
+        hackerVehiclesList.setLayoutX(1125.0);
+        hackerVehiclesList.setLayoutY(350.0);
         hackerVehiclesList.setMaxHeight(100);
+        hackerVehiclesList.setMaxWidth(175.0);
         hackerVehiclesList.setItems(simulation.getMap().getVehicles());
 //.filtered(x->!x.safe)
 
@@ -192,8 +193,8 @@ public class WindowApp extends Application {
                 }
             }
         });
-        seeThrough.setLayoutX(1050);
-        seeThrough.setLayoutY(80.0);
+        seeThrough.setLayoutX(1150);
+        seeThrough.setLayoutY(155.0);
 
         // Other stuff.
         chooseFakeEvent.setLayoutX(1130.0);

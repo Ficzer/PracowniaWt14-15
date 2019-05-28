@@ -1,18 +1,25 @@
 package com.pracownia.vanet;
 
+
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.util.stream.Collectors;
+
 public class WindowApp extends Application {
 
+    public CheckBox seeThrough;
     public TextField trustLevelField;
     public TextField speedField;
     public TextField vehIdField;
@@ -47,7 +54,9 @@ public class WindowApp extends Application {
 
         setInterface(simulation);
 
-        Scene scene = new Scene(root, 1100, 800);
+
+        Scene scene = new Scene(root, 1400, 850);
+
         primaryStage.setTitle("Vanet");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -59,10 +68,13 @@ public class WindowApp extends Application {
         Button showRangeButton = new Button("Show Range");
         Button changeRangeButton = new Button("ChangeRange");
         Button spawnVehiclesButton = new Button("Spawn Vehicles");
+        Button spawnFakedVeehicle = new Button("Spawn fake vehicle");
         TextField vehiclesAmountField = new TextField();
         TextField rangeAmountField = new TextField();
         Label rangeAmountLabel = new Label("Range");
         Label vehiclesAmountLabel = new Label("Vehicle Amount");
+        ChoiceBox chooseFakeEvent = new ChoiceBox(FXCollections.observableArrayList(
+                "Car accident", "Speed camera", "Police control"));
 
         // Start stop simulation.
         Button startSimulation = new Button("Start simulation");
@@ -79,6 +91,20 @@ public class WindowApp extends Application {
             simulation.setSimulationRunning(false);
         });
 
+        Button addHackerVehicle = new Button("Add hacker vehicle");
+        addHackerVehicle.setLayoutX(1130.0);
+        addHackerVehicle.setLayoutY(200.00);
+        addHackerVehicle.setOnAction(e -> {
+            shapesCreator.setCopyCircle(simulation.getMap().addCopy());
+        });
+
+        Button teleportVehicle = new Button("Teleport a vehicle");
+        teleportVehicle.setLayoutX(1130.0);
+        teleportVehicle.setLayoutY(230.0);
+        teleportVehicle.setOnAction(e -> {
+            simulation.teleportVehicle();
+        });
+
         Button saveVehicleButton = new Button("Save vehicle");
         saveVehicleButton.setLayoutX(950.0);
         saveVehicleButton.setLayoutY(280.);
@@ -86,6 +112,13 @@ public class WindowApp extends Application {
             Vehicle v = simulation.getMap().getVehicles().get(Integer.parseInt(this.vehIdField.getText()));
             v.setSpeed(Double.parseDouble(this.speedField.getText()));
             v.setTrustLevel(Double.parseDouble(this.trustLevelField.getText()));
+        });
+
+        Button clearNotSafe = new Button("Clear hackers");
+        clearNotSafe.setLayoutX(1130.0);
+        clearNotSafe.setLayoutY(265.0);
+        clearNotSafe.setOnAction(e -> {
+            simulation.deleteUnsafeCircles();
         });
 
 
@@ -139,7 +172,37 @@ public class WindowApp extends Application {
         connVehLabel.setLayoutX(950.0);
         connVehLabel.setLayoutY(730.0);
 
+        ListView<Vehicle> hackerVehiclesList = new ListView<>();
+        hackerVehiclesList.setLayoutX(1125.0);
+        hackerVehiclesList.setLayoutY(350.0);
+        hackerVehiclesList.setMaxHeight(100);
+        hackerVehiclesList.setMaxWidth(175.0);
+        hackerVehiclesList.setItems(simulation.getMap().getVehicles());
+//.filtered(x->!x.safe)
+
+
+        seeThrough = new CheckBox("Widac?");
+        seeThrough.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if(t1) {
+                    simulation.here = Color.TRANSPARENT;
+                }
+                else {
+                    simulation.here = Color.RED;
+                }
+            }
+        });
+        seeThrough.setLayoutX(1150);
+        seeThrough.setLayoutY(155.0);
+
         // Other stuff.
+        chooseFakeEvent.setLayoutX(1130.0);
+        chooseFakeEvent.setLayoutY(80.0);
+        chooseFakeEvent.setValue("Car accident");
+
+        spawnFakedVeehicle.setLayoutX(1130.0);
+        spawnFakedVeehicle.setLayoutY(110.0);
 
         showRangeButton.setLayoutX(950.0);
         showRangeButton.setLayoutY(80.0);
@@ -172,6 +235,13 @@ public class WindowApp extends Application {
             }
         });
 
+        spawnFakedVeehicle.setOnAction(e -> {
+            simulation.getMap().addFakeVehicle(chooseFakeEvent.getValue().toString());
+            shapesCreator.setVehicleCircles(simulation, 1);
+            shapesCreator.setLabels(simulation, 1);
+
+        });
+
         spawnVehiclesButton.setOnAction(e -> {
             simulation.getMap().addVehicles(Integer.parseInt(vehiclesAmountField.getText()));
             shapesCreator.setVehicleCircles(simulation, Integer.parseInt(vehiclesAmountField.getText()));
@@ -179,7 +249,9 @@ public class WindowApp extends Application {
         });
 
         root.getChildren()
-                .addAll(showRangeButton,
+                .addAll(chooseFakeEvent,
+                        spawnFakedVeehicle,
+                        showRangeButton,
                         spawnVehiclesButton,
                         vehiclesAmountField,
                         stopSimulation,
@@ -200,6 +272,13 @@ public class WindowApp extends Application {
                         vehiclesAmountLabel,
                         rangeAmountLabel,
                         rangeAmountField,
-                        changeRangeButton);
+                        changeRangeButton,
+                        teleportVehicle,
+                        addHackerVehicle,
+                        clearNotSafe,
+                        hackerVehiclesList,
+                        seeThrough);
     }
+
+
 }

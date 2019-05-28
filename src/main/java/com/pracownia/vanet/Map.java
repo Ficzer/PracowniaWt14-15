@@ -1,5 +1,9 @@
 package com.pracownia.vanet;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import lombok.Data;
 
 import java.awt.*;
@@ -7,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Przechoowuje samochody i ich powiązania z trasami.
@@ -18,23 +23,57 @@ public class Map {
 	private double width = 1000.0;
 	private double height = 900.0;
 
+	private static int fakeCarId = -666;
+	private static int fakeEventId = -1;
+
 	private List<Route> routes;
-	private List<Vehicle> vehicles;
+	private ObservableList<Vehicle> vehicles;
 	private List<Crossing> crossings;
 	private List<EventSource> eventSources;
 	private List<StationaryNetworkPoint> stationaryNetworkPoints;
-
+	private ObservableList<Vehicle> hackers;
 
 
 	public Map(){
 
 		routes = new ArrayList<>();
-		vehicles = new ArrayList<>();
+		vehicles = FXCollections.observableArrayList();
+
+//		vehicles.addListener((ListChangeListener.Change<? extends Vehicle> change) -> {
+//			while (change.next()) {
+//				for (Vehicle vehicle : vehicles) {
+//					if(!vehicle.safe){
+//						if(!hackers.contains(vehicle))
+//							hackers.add(vehicle);
+//					}else{
+//						if(hackers.contains(vehicle))
+//							hackers.remove(vehicle);
+//					}
+//				}
+////				hackersvehicles.stream().filter(x->!x.safe).collect(Collectors.toList()));
+//			}
+//		});
+		
+		hackers = FXCollections.observableArrayList();
 		crossings = new ArrayList<>();
 		eventSources = new ArrayList<>();
 		stationaryNetworkPoints = new ArrayList<>();
 		initMap();
 
+	}
+
+	public List<Integer> deleteUnsafeVehicles() {
+
+		List<Integer> result = new ArrayList<>();
+		for(int i = 0; i < vehicles.size(); i++) {
+			if(vehicles.get(i).safe == false) {
+				result.add(i);
+				vehicles.remove(i);
+				i--;
+			}
+		}
+
+		return result;
 	}
 
 	private void initMap()
@@ -77,5 +116,26 @@ public class Map {
 		}
 	}
 
+	public Vehicle addCopy() {
+		int r = new Random().nextInt(vehicles.size());
+		Vehicle me = new Vehicle(vehicles.get(r).getRoute(), vehicles.get(r).getId(), vehicles.get(r).getRange(), vehicles.get(r).getSpeed());
+		vehicles.add(me);
+
+		return me;
+	}
+
+	public void addFakeVehicle(String nameEvent)
+	{
+		Random random = new Random();
+		int x = (int)(random.nextDouble() * 1000);
+		int y = (int)(random.nextDouble() * 1000);
+		Vehicle vehicle = new Vehicle(routes.get(99%5), fakeCarId, 40.0, random.nextDouble() / 2.0 + 2);
+		EventSource eventSource = new EventSource(fakeEventId, nameEvent, "Fake Car Accident",
+				new Point(x, y), new Date(), 20.0, EventType.CAR_ACCIDENT);
+		vehicle.addFakeEvent(eventSource);
+		vehicles.add(vehicle);
+		fakeCarId--;
+		fakeEventId--;
+	}
 
 }

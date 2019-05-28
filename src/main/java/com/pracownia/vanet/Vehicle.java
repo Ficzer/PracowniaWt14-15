@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -25,11 +26,46 @@ public class Vehicle extends NetworkPoint {
     private boolean direction = true; // True if from starting point to end point
     public List<StationaryNetworkPoint> connectedPoints = new ArrayList<>();
 
+    public Date date;
+    public Point previousCrossing;
+    public boolean safe = true;
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public Point getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public Point getPreviousCrossing() {
+        return previousCrossing;
+    }
+
+    public void setPreviousCrossing(Point previousCrossing) {
+        this.previousCrossing = previousCrossing;
+        this.setDate(new Date());
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+
     public Vehicle() {
         super();
         route = new Route();
         trustLevel = 0.5;
         currentLocation = new Point();
+    }
+
+    public void setNotSafe(String mssg) {
+        System.out.println(id + ": " + mssg);
+        this.safe = false;
     }
 
     public Vehicle(Route route, int id, double range, double speed) {
@@ -142,7 +178,7 @@ public class Vehicle extends NetworkPoint {
             direction = !direction;
         }
 
-        System.out.println(this.toString());
+        //System.out.println(this.toString());
     }
 
     public boolean isPointInList(StationaryNetworkPoint point, List<StationaryNetworkPoint> list) {
@@ -158,7 +194,14 @@ public class Vehicle extends NetworkPoint {
     @Override
     public String toString() {
         return "ID:\t" + id + '\t' +
-                "Neighbours:\t" + connectedVehicles.size() + '\t' +
-                "Current location:\t" + currentLocation;
+                "safe: " + safe;
+//                "Neighbours:\t" + connectedVehicles.size() + '\t' +
+//                "Current location:\t" + currentLocation;
+    }
+
+    public void addFakeEvent(EventSource eventSource)
+    {
+        AntyBogus.addEvent(eventSource.getEvent() ,this);
+        this.getEncounteredEvents().add(eventSource.getEvent());
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class AntyBogus {
-    private static final int CONFIRMATION_LEVEL = 2;
+    private static final int CONFIRMATION_LEVEL = 3;
     private static final double TRUST_LEVEL_BONUS = 1.0;
     private static final double THRESH_HOLD = 10E-15;
     private static ConcurrentMap<Event, ObservableList<Vehicle>> eventsByVehicle;
@@ -28,9 +28,9 @@ public class AntyBogus {
 
         cleanEventsTaskExecutor = Executors.newScheduledThreadPool(1);
         cleanEventsTaskExecutor.scheduleAtFixedRate(createCleaningEventsTask(),
-                5,
-                5,
-                    TimeUnit.MINUTES
+                30,
+                30,
+                    TimeUnit.SECONDS
                 );
     }
 
@@ -38,9 +38,11 @@ public class AntyBogus {
         return () -> {
             Date currentDate = new Date(System.currentTimeMillis());
             for (Event e : eventsByVehicle.keySet()) {
-                if (currentDate.getTime() >= (e.getEventDate().getTime() + TimeUnit.MINUTES.toMillis(5))) {
-                    addVehicleToDecrease(eventsByVehicle.get(e), e);
-                    eventsByVehicle.remove(e);
+                if (currentDate.getTime() >= (e.getEventDate().getTime() + TimeUnit.SECONDS.toMillis(15))) {
+                    if(eventsByVehicle.get(e).size() < CONFIRMATION_LEVEL){
+                        addVehicleToDecrease(eventsByVehicle.get(e), e);
+                        eventsByVehicle.remove(e);
+                    }
                 }
             }
         };
@@ -49,7 +51,9 @@ public class AntyBogus {
     public static void addEvent(Event event, Vehicle vehicle) {
         if (!eventsByVehicle.containsKey(event)) {
             eventsByVehicle.put(event, createObservableList(vehicle, event));
-            modifiedTrustLevelVehicles.put(event, new ArrayList<>());
+            if(!modifiedTrustLevelVehicles.containsKey(event)){
+                modifiedTrustLevelVehicles.put(event, new ArrayList<>());
+            }
         } else if (!eventsByVehicle.get(event).contains(vehicle)) {
             eventsByVehicle.get(event).add(vehicle);
         }

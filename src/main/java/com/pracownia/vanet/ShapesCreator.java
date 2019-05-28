@@ -112,6 +112,15 @@ public class ShapesCreator {
         }
     }
 
+    public void setCopyCircle(Vehicle vehicle) {
+        Circle circle = circleCreator(vehicle);
+        Circle rangeCircle = rangeCreator(vehicle);
+        simulation.getCircleList().add(circle);
+        simulation.getRangeList().add(rangeCircle);
+        root.getChildren().add(rangeCircle);
+        root.getChildren().add(circle);
+    }
+
     public void setSourceEventCircles(Simulation simulation) {
         for (int i = 0; i < simulation.getMap().getEventSources().size(); i++) {
             Circle circle = circleCreator(simulation.getMap().getEventSources().get(i));

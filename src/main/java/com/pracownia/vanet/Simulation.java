@@ -8,6 +8,9 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Data
 public class Simulation implements Runnable {
@@ -168,7 +171,9 @@ public class Simulation implements Runnable {
             s.update(map);
             s.checkIfChangeVehicleTrustLevel();
             try {
-                if (s.getCollectedEvents().size() > 0) { stationaryCirclelist.get(it).setFill(Color.CYAN); }
+                if (s.connectedVehicles.size() > 0) { stationaryCirclelist.get(it).setFill(Color.ORANGE); }
+                else { stationaryCirclelist.get(it).setFill(Color.BLUE); }
+                //if (s.getCollectedEvents().size() > 0) { stationaryCirclelist.get(it).setFill(Color.CYAN); }
             } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }

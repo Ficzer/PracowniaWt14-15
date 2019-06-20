@@ -5,12 +5,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Data
 public class Simulation implements Runnable {
@@ -159,7 +159,9 @@ public class Simulation implements Runnable {
                     }
 
                     vehicle.getEncounteredEvents().add(eventSource.getEvent());
-                    System.out.println("Event Encountered by Vehicle");
+                    Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+                    Logger.log("[" + timeStamp + "] Event " + eventSource.getId() + " encountered by Vehicle " + vehicle.getId());
+                    System.out.println("[" + timeStamp + "] Event " + eventSource.getId() + " encountered by Vehicle " + vehicle.getId());
                 }
             }
         }

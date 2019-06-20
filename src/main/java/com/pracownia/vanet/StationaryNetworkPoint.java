@@ -2,6 +2,8 @@ package com.pracownia.vanet;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
 public class StationaryNetworkPoint extends NetworkPoint
 {
@@ -19,11 +21,15 @@ public class StationaryNetworkPoint extends NetworkPoint
             if(AntyBogus.vehiclesToIncreaseTrustLevel.contains(v)){
                 increaseVehicleTrustLevel(v);
                 AntyBogus.vehiclesToIncreaseTrustLevel.remove(v);
-                System.out.println("Increased " + v.id);
+                Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+                Logger.log("[" + timeStamp + "] Increased trust level of Vehicle " + v.id);
+                System.out.println("[" + timeStamp + "] Increased trust level of Vehicle " + v.id);
             } else if(AntyBogus.vehiclesToDecreaseTrustLevel.contains(v)){
                 decreaseVehicleTrustLevel(v);
                 AntyBogus.vehiclesToDecreaseTrustLevel.remove(v);
-                System.out.println("Decreased " + v.id);
+                Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+                Logger.log("[" + timeStamp + "] Decreased trust level of Vehicle " + v.id);
+                System.out.println("[" + timeStamp + "] Decreased trust level of Vehicle " + v.id);
             }
         }
     }

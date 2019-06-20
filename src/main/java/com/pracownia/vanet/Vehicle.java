@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,8 +65,13 @@ public class Vehicle extends NetworkPoint {
     }
 
     public void setNotSafe(String mssg) {
-        System.out.println(id + ": " + mssg);
-        this.safe = false;
+        if(this.safe == true)
+        {
+            Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+            Logger.log("[" + timeStamp + "] Vehicle "+ id + " : " + mssg);
+            System.out.println("[" + timeStamp + "] Vehicle "+ id + " : " + mssg);
+            this.safe = false;
+        }
     }
 
     public Vehicle(Route route, int id, double range, double speed) {
@@ -126,7 +132,9 @@ public class Vehicle extends NetworkPoint {
 
                 if (!flag && this.trustLevel >= 0.5) {
                     connectedVehicle.getCollectedEvents().add(event);
-                    System.out.println("Event shared from Vehicle to Vehicle");
+                    Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+                    Logger.log("[" + timeStamp + "] Event " + event.getId() + " shared from Vehicle " + this.getId() + " to Vehicle " + connectedVehicle.getId());
+                    System.out.println("[" + timeStamp + "] Event " + event.getId() + " shared from Vehicle " + this.getId() + " to Vehicle " + connectedVehicle.getId());
                 }
             }
         }
@@ -142,7 +150,9 @@ public class Vehicle extends NetworkPoint {
 
                 if (!flag && this.trustLevel >= 0.5) {
                     connectedPoint.getCollectedEvents().add(event);
-                    System.out.println("Event shared from Vehicle to Stationary");
+                    Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+                    Logger.log("[" + timeStamp + "] Event " + event.getId() + " shared from Vehicle " + this.getId() + " to Stationary");
+                    System.out.println("[" + timeStamp + "] Event " + event.getId() + " shared from Vehicle " + this.getId() + " to Stationary");
                 }
             }
         }

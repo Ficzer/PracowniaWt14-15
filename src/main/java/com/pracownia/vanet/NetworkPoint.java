@@ -2,6 +2,7 @@ package com.pracownia.vanet;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,9 @@ public abstract class NetworkPoint {
 
                 if (!flag) {
                     connectedVehicle.getCollectedEvents().add(event);
-                    System.out.println("Event shared from Stationary to Vehicle");
+                    Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+                    Logger.log("[" + timeStamp + "] Event " + event.getId() + " shared from Stationary to Vehicle " + connectedVehicle.getId());
+                    System.out.println("[" + timeStamp + "] Event " + event.getId() + " shared from Stationary to Vehicle " + connectedVehicle.getId());
                 }
             }
         }

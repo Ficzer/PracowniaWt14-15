@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class AntyBogus {
-    private static final int CONFIRMATION_LEVEL = 3;
+    private static final int CONFIRMATION_LEVEL = 2;
     private static final double TRUST_LEVEL_BONUS = 1.0;
     private static final double THRESH_HOLD = 10E-15;
     private static ConcurrentMap<Event, ObservableList<Vehicle>> eventsByVehicle;

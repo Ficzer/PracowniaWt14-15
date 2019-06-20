@@ -5,9 +5,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.io.IOException;
+import java.util.logging.Level;
 
 @Data
 public class Simulation implements Runnable {
@@ -156,7 +159,9 @@ public class Simulation implements Runnable {
                     }
 
                     vehicle.getEncounteredEvents().add(eventSource.getEvent());
-                    System.out.println("Event Encountered by Vehicle");
+                    Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+                    Logger.log("[" + timeStamp + "] Event " + eventSource.getId() + " encountered by Vehicle " + vehicle.getId());
+                    System.out.println("[" + timeStamp + "] Event " + eventSource.getId() + " encountered by Vehicle " + vehicle.getId());
                 }
             }
         }
@@ -168,7 +173,9 @@ public class Simulation implements Runnable {
             s.update(map);
             s.checkIfChangeVehicleTrustLevel();
             try {
-                if (s.getCollectedEvents().size() > 0) { stationaryCirclelist.get(it).setFill(Color.CYAN); }
+                if (s.connectedVehicles.size() > 0) { stationaryCirclelist.get(it).setFill(Color.ORANGE); }
+                else { stationaryCirclelist.get(it).setFill(Color.BLUE); }
+                //if (s.getCollectedEvents().size() > 0) { stationaryCirclelist.get(it).setFill(Color.CYAN); }
             } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }

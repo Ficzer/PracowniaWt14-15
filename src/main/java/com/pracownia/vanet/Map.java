@@ -104,6 +104,12 @@ public class Map {
 
 		eventSources.add(new EventSource(0, "Car Accident", "Serious Car Accident",
 				new Point(250.0, 210.0), new Date(), 20.0, EventType.CAR_ACCIDENT));
+
+		eventSources.add(new EventSource(1, "Car Accident", "Serious Car Accident",
+				new Point(500.0, 410.0), new Date(), 20.0, EventType.CAR_ACCIDENT));
+
+		eventSources.add(new EventSource(2, "Car Accident", "Serious Car Accident",
+				new Point(750.0, 610.0), new Date(), 20.0, EventType.CAR_ACCIDENT));
 	}
 
 	public void addVehicles(int amount)

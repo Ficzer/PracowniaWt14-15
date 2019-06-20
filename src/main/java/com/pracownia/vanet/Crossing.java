@@ -68,12 +68,11 @@ public class Crossing {
 //            System.out.println("pozycja skrzyzowania: " + location.getX() + " --- " + location.getY());
 
             if (Math.abs(v - vehicle.getSpeed()) > 0.5) {
-                System.out.println("Atak hakierów!!!");
-                vehicle.setNotSafe("PIRAT");
+                vehicle.setNotSafe("Identified as attacker!");
             } else if(vehicle.trustLevel < 0.3) {
-                vehicle.setNotSafe("PIRAT");
+                vehicle.setNotSafe("Identified as attacker!");
             } else {
-                System.out.println("Bezpiecznie.");
+                //System.out.println("Bezpiecznie.");
             }
         }
 
